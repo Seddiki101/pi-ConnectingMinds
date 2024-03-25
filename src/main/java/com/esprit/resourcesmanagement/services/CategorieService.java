@@ -1,4 +1,6 @@
 package com.esprit.resourcesmanagement.services;
-
-public class CategorieService {
+/**
+ * Categorie Service Manipulations.
+ */
+public interface CategorieService {
 }

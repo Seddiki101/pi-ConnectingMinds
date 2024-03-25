@@ -1,4 +1,6 @@
 package com.esprit.resourcesmanagement.services;
-
-public class ResourceService {
+/**
+ * Resource Service Manipulations.
+ */
+public interface ResourceService {
 }
