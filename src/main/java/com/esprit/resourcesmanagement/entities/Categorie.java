@@ -19,13 +19,4 @@ public class Categorie implements Serializable {
     private int id;
     private String name;
     private String description;
-    private long size;
-    @Lob
-    private byte[] content;
-    @ManyToOne
-    @JoinColumn(name = "categorie_id")
-    private Categorie categorie;
-    private int likes;
-    private int dislikes;
-    private int downloads;
 }
