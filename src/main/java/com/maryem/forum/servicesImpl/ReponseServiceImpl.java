@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -112,6 +113,21 @@ public class ReponseServiceImpl implements ReponseService {
     @Override
     public List<Reponse> getAllAnswers() {
         return reponseRepository.findAll();
+    }
+
+    @Override
+    public List<Reponse> getAllAnswersForQuestion(int idQuestion) {
+        // Récupérer la question correspondante
+        Question question = questionRepository.findById(idQuestion).orElse(null);
+
+        // Vérifier si la question existe
+        if (question == null) {
+            LOG.error(String.format(ERROR_NON_PRESENT_ID, idQuestion));
+            return Collections.emptyList(); // Retourner une liste vide en cas d'erreur
+        }
+
+        // Récupérer toutes les réponses associées à cette question
+        return reponseRepository.findByQuestion(question);
     }
 }
 

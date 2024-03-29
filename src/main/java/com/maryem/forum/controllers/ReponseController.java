@@ -33,5 +33,10 @@ public class ReponseController {
         List<Reponse> answers =  reponseService.getAllAnswers();
         return answers;
     }
+    @GetMapping("/AnswersByQuestion/{idQuestion}")
+    @ResponseBody
+    public List<Reponse> getAllAnswersForQuestion(@PathVariable int idQuestion){
+        return reponseService.getAllAnswersForQuestion(idQuestion);
+    }
 
 }
