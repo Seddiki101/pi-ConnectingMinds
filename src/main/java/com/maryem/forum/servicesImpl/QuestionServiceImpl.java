@@ -7,8 +7,12 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.thymeleaf.util.StringUtils;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 import static org.hibernate.id.SequenceMismatchStrategy.LOG;
@@ -24,28 +28,30 @@ public class QuestionServiceImpl implements QuestionService {
     private static final String ERROR_UPDATE = "Error occured while updating";
     @Resource
     QuestionRepository questionRepository;
+
+
     @Override
-    public Question ajouterQuestion(Question question) {
-        if (question != null) {
-            // Créer une nouvelle instance de Question pour éviter de modifier l'objet d'origine
+    public Question ajouterQuestion(String contenu, MultipartFile imageFile) throws IOException {
+        if (!StringUtils.isEmpty(contenu)) {
             Question newQuestion = new Question();
+            newQuestion.setContenu(contenu);
 
-            // Copier les attributs nécessaires de la question fournie
-            newQuestion.setContenu(question.getContenu());
-
-            // Initialiser createdAt si nécessaire
-            if (question.getCreatedAt() == null) {
-                newQuestion.setCreatedAt(LocalDateTime.now());
+            // Vérifier si une image a été fournie
+            if (imageFile != null && !imageFile.isEmpty()) {
+                newQuestion.setImage(imageFile.getBytes());
             }
 
-            // Enregistrer et retourner la nouvelle question avec uniquement le contenu
+            if (newQuestion.getCreatedAt() == null) {
+                newQuestion.setCreatedAt(LocalDateTime.now());
+            }
             return questionRepository.save(newQuestion);
         } else {
-            // Gérer l'erreur si la question est null
-            LOG.error(ERROR_NULL_ID);
+            LOG.error("Le contenu ne peut pas être vide");
             return null;
         }
     }
+
+
 
     @Override
     public Question updateQuestion(Question question) {
@@ -58,6 +64,10 @@ public class QuestionServiceImpl implements QuestionService {
                 // Mettre à jour seulement le contenu si non null
                 if (question.getContenu() != null) {
                     existingQuestion.setContenu(question.getContenu());
+                }
+                // Mettre à jour l'image si une nouvelle image est fournie
+                if (question.getImage() != null) {
+                    existingQuestion.setImage(question.getImage());
                 }
                 // Mettre à jour updatedAt
                 existingQuestion.setUpdatedAt(LocalDateTime.now());
@@ -101,7 +111,18 @@ public class QuestionServiceImpl implements QuestionService {
         return questionRepository.findAll();
     }
 
-
+    //@Override
+    //public Question ajouterQuestionI(String contenu, MultipartFile file) {
+        //Question p =new Question();
+       /// String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+       // p.setContenu(contenu);
+       // try {
+         //   p.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+       // } catch (IOException e) {
+          //  throw new RuntimeException(e);
+        //}
+      //  return questionRepository.save(p);
+  //  }
 
 
 }

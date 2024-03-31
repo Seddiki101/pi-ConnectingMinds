@@ -5,12 +5,15 @@ import com.maryem.forum.daos.ReponseRepository;
 import com.maryem.forum.entities.Question;
 import com.maryem.forum.entities.Reponse;
 import com.maryem.forum.services.ReponseService;
+import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -28,10 +31,10 @@ public class ReponseServiceImpl implements ReponseService {
     private static final String ERROR_UPDATE = "Error occured while updating";
     @Override
     @Transactional
-    public Reponse ajouterReponse(Reponse reponse , int idQuestion) {
-        // Vérifier si la réponse est null
-        if (reponse == null) {
-            LOG.error("Posted answer is NULL");
+    public Reponse ajouterReponse(String contenu, int idQuestion, MultipartFile imageFile) {
+        // Vérifier si le contenu de la réponse est null ou vide
+        if (StringUtils.isEmpty(contenu)) {
+            LOG.error("Posted answer content is NULL or empty");
             return null;
         }
 
@@ -48,19 +51,28 @@ public class ReponseServiceImpl implements ReponseService {
         Reponse newReponse = new Reponse();
 
         // Copier le contenu fourni
-        newReponse.setContenu(reponse.getContenu());
+        newReponse.setContenu(contenu);
+
+        // Vérifier si une image a été fournie
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                newReponse.setImage(imageFile.getBytes());
+            } catch (IOException e) {
+                LOG.error("Error occurred while processing image file: " + e.getMessage());
+                return null;
+            }
+        }
 
         // Associer la réponse à la question
         newReponse.setQuestion(question);
 
         // Mettre à jour la date de création si elle est nulle
-        if (reponse.getCreatedAt() == null) {
-            newReponse.setCreatedAt(LocalDateTime.now());
-        }
+        newReponse.setCreatedAt(LocalDateTime.now());
 
         // Enregistrer la réponse dans la base de données
         return reponseRepository.save(newReponse);
     }
+
 
     @Override
     public Reponse updateAnswer(Reponse reponse) {
@@ -73,6 +85,10 @@ public class ReponseServiceImpl implements ReponseService {
                 // Mettre à jour seulement le contenu si non null
                 if (reponse.getContenu() != null) {
                     existingAnswer.setContenu(reponse.getContenu());
+                }
+                // Mettre à jour l'image si une nouvelle image est fournie
+                if (reponse.getImage() != null) {
+                    existingAnswer.setImage(reponse.getImage());
                 }
                 // Mettre à jour updatedAt
                 existingAnswer.setUpdatedAt(LocalDateTime.now());
