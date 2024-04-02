@@ -24,8 +24,8 @@ private int id;
     @Lob
     private byte[] content;
     @ManyToOne
-    @JoinColumn(name = "categorie_id")
-    private Categorie categorie;
+    @JoinColumn(name = "category_id")
+    private Category category;
     private int likes;
     private int dislikes;
     private int downloads;

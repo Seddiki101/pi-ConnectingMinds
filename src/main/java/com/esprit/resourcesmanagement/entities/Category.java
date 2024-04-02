@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Table(name="categories")
-public class Categorie implements Serializable {
+public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

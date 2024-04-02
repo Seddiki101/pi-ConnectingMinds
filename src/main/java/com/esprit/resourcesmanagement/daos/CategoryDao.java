@@ -1,12 +1,12 @@
 package com.esprit.resourcesmanagement.daos;
 
-import com.esprit.resourcesmanagement.entities.Categorie;
+import com.esprit.resourcesmanagement.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Data access Object of Categorie entity
+ * Data access Object of Category entity
  */
 @Repository
-public interface CategorieDao extends JpaRepository<Categorie, Long> {
+public interface CategoryDao extends JpaRepository<Category, Long> {
 }
