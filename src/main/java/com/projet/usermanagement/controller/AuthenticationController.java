@@ -30,8 +30,7 @@ public class AuthenticationController {
 
     @GetMapping(path = "/confirmEmail")
     public String confirm(@RequestParam("token") String token) {
-
-        System.out.println("to ken " +token);
+        
         return authService.confirmToken(token);
     }
 
