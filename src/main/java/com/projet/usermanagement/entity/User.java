@@ -49,6 +49,8 @@ public class User implements UserDetails {
     private Boolean locked = false;
     private Boolean enable = false;
 
+    private String resetPasswordToken;
+
 
     @OneToMany(mappedBy = "user")
     private List<Token> tokens;
@@ -132,5 +134,13 @@ public class User implements UserDetails {
 
     public void setTokens(List<Token> tokens) {
         this.tokens = tokens;
+    }
+
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
     }
 }

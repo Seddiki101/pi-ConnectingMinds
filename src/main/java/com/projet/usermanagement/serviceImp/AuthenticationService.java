@@ -14,6 +14,7 @@ import com.projet.usermanagement.security.ConfirmationToken;
 import com.projet.usermanagement.serviceImp.ConfirmationTokenService;
 import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,22 +32,27 @@ import java.util.regex.Pattern;
 @Service
 
 public class AuthenticationService {
-
-    private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+@Autowired
+    private  UserRepository repository;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
+    @Autowired
+    private  JwtService jwtService;
     @Resource
-    private final ConfirmationTokenService confirmationTokenService  ;
+    private  ConfirmationTokenService confirmationTokenService  ;
+    @Autowired
+    private  TokenRepository tokenRepository;
+    @Autowired
+    private  AuthenticationManager authenticationManager;
 
-    private final TokenRepository tokenRepository;
+    @Autowired
+    private EmailSender emailSender;
 
-    private final AuthenticationManager authenticationManager;
-    private final EmailSender emailSender;
 
     private static final String EMAIL_PATTERN =
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-
+/*
     public AuthenticationService(UserRepository repository,
                                  PasswordEncoder passwordEncoder,
                                  JwtService jwtService, ConfirmationTokenService confirmationTokenService,
@@ -60,6 +66,7 @@ public class AuthenticationService {
         this.authenticationManager = authenticationManager;
         this.emailSender = emailSender;
     }
+    */
 
     private boolean validateEmail(String email) {
         if (email == null) {
