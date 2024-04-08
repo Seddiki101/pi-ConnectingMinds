@@ -6,6 +6,7 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -21,6 +22,10 @@ public class EmailService implements EmailSender{
             .getLogger(EmailService.class);
 
     private final JavaMailSender mailSender;
+
+
+
+    //apparenntly simple message doesn t format html and you need mime
 
     @Override
     @Async
@@ -40,6 +45,68 @@ public class EmailService implements EmailSender{
         }
     }
 
+    public String sendForgetPasswordEmail(String recipientEmail, String link) {
+        String subject = "Here's the link to reset your password";
+
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+            String htmlMsg = "<p>Hello,</p>\n"
+                    + "<p>You have requested to reset your password.</p>\n" +
+                    "<p>Click the link below to change your password:</p>\n" +
+                    "<p><a href='" + link + "'>Change my password</a></p>\n" +
+                    "<br>\n" +
+                    "<p>Ignore this email if you do remember your password, \n" +
+                    "or you have not made the request.</p>";
+
+            helper.setText(htmlMsg, true); // true indicates this is an HTML email
+            helper.setTo(recipientEmail);
+            helper.setSubject(subject);
+            helper.setFrom("t0367849@gmail.com");
+
+            mailSender.send(mimeMessage);
+            return "Mail Sent Successfully...";
+        } catch (MessagingException e) {
+            LOGGER.error("Failed to send email", e);
+            return "Error while Sending Mail";
+        }
+    }
+
+
+    public String sendForgetPasswordEmail2(String recipientEmail, String link) {
+        String subject = "Here's the link to reset your password";
+
+
+        try {
+
+            // Creating a simple mail message
+            SimpleMailMessage mailMessage
+                    = new SimpleMailMessage();
+
+            //might need to comment or change this later
+            mailMessage.setFrom("t0367849@gmail.com");
+
+            mailMessage.setTo(recipientEmail);
+            mailMessage.setText("<p>Hello,</p>\n"
+                    + "<p>You have requested to reset your password.</p>\n" +
+                    "<p>Click the link below to change your password:</p>\n" +
+                    "<p><a href=\"" + link + "\">Change my password</a></p>\n" +
+                    "<br>\"\n" +
+                    "<p>Ignore this email if you do remember your password, \n" +
+                    "or you have not made the request.</p>");
+            mailMessage.setSubject(subject);
+
+            // Sending the mail
+            mailSender.send(mailMessage);
+            return "Mail Sent Successfully...";
+        }
+
+        // Catch block to handle the exceptions
+        catch (Exception e) {
+            return "Error while Sending Mail";
+        }
+    }
 
 
 
@@ -112,6 +179,8 @@ public class EmailService implements EmailSender{
                 "\n" +
                 "</div></div>";
     }
+
+
 
 
 
