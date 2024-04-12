@@ -3,14 +3,12 @@ package com.projet.usermanagement.controller;
 import com.projet.usermanagement.dto.EmailRequest;
 import com.projet.usermanagement.emailer.EmailSender;
 import com.projet.usermanagement.emailer.EmailService;
+import com.projet.usermanagement.entity.User;
 import com.projet.usermanagement.serviceImp.AuthenticationService;
 import com.projet.usermanagement.serviceImp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -26,16 +24,35 @@ public class UserUtilsController {
 
     @PostMapping("/forgot_password")
     public String processForgotPassword(@RequestBody EmailRequest e) {
-        String token = UUID.randomUUID().toString();
-       // System.out.println("test 3");
-       // System.out.println( e.getEmail() );
-       // System.out.println("end of test 3");
+        User u = userService.getUserbymail(e.getEmail());
+        if ( u   != null && u.getEnable() != false ) {
 
-        userService.updateResetPasswordToken(token, e.getEmail() );
-        String resetPasswordLink = "http://localhost:4200/changepassword;token=" + token;
-        emailSender.sendForgetPasswordEmail( e.getEmail() , resetPasswordLink);
+                String token = UUID.randomUUID().toString();
+                // System.out.println("test 3");
+                // System.out.println( e.getEmail() );
+                // System.out.println("end of test 3");
 
-        return "We have sent a reset password link to your email. Please check.";
+                userService.updateResetPasswordToken(token, e.getEmail());
+                String resetPasswordLink = "http://localhost:4200/reset-password?token=" + token;
+                emailSender.sendForgetPasswordEmail(e.getEmail(), resetPasswordLink);
+
+                return "We have sent a reset password link to your email. Please check.";
+        }
+        return "the email doesn t exist " ;
     }
+
+
+    @PostMapping("/reset_password")
+    public String processResetPassword(@RequestParam String token, @RequestParam String password)  {
+       // System.out.println("the token that is received in forgot pass " +token);
+        User user = userService.getByResetPasswordToken(token);
+        if (user != null ) {
+            userService.updatePassword(user, password);
+            return "your password changed successfully";
+        }
+        return "unexpected error ";
+    }
+
+
 
 }
