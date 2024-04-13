@@ -52,7 +52,8 @@ public class User implements UserDetails {
     private String resetPasswordToken;
 
 
-    @OneToMany(mappedBy = "user")
+  //  @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Token> tokens;
 
     public Long getId() {

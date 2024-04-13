@@ -52,21 +52,7 @@ public class AuthenticationService {
     private static final String EMAIL_PATTERN =
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-/*
-    public AuthenticationService(UserRepository repository,
-                                 PasswordEncoder passwordEncoder,
-                                 JwtService jwtService, ConfirmationTokenService confirmationTokenService,
-                                 TokenRepository tokenRepository,
-                                 AuthenticationManager authenticationManager, EmailSender emailSender) {
-        this.repository = repository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-        this.confirmationTokenService = confirmationTokenService;
-        this.tokenRepository = tokenRepository;
-        this.authenticationManager = authenticationManager;
-        this.emailSender = emailSender;
-    }
-    */
+
 
     private boolean validateEmail(String email) {
         if (email == null) {
@@ -141,7 +127,7 @@ public class AuthenticationService {
 
         revokeAllTokenByUser(user);
         saveUserToken(jwt, user);
-
+        // maybe send user name
         return new AuthenticationResponse(jwt, "User login was successful");
 
     }
@@ -164,41 +150,6 @@ public class AuthenticationService {
         token.setUser(user);
         tokenRepository.save(token);
     }
-
-    /*
-    @Transactional
-    public String confirmToken(String token) {
-        Optional<ConfirmationToken> confirmationTokenOptional = confirmationTokenService.getToken(token);
-
-        // Check if the token was found
-        if (!confirmationTokenOptional.isPresent()) {
-            System.out.println("token not found");
-            return "token not found";
-        }
-
-        ConfirmationToken confirmationToken = confirmationTokenOptional.get();
-
-        // Check if the email was already confirmed
-        if (confirmationToken.getConfirmedAt() != null) {
-            System.out.println("email already confirmed");
-            return "email already confirmed";
-        }
-
-        // Check if the token has expired
-        LocalDateTime expiredAt = confirmationToken.getExpiresAt();
-        if (expiredAt.isBefore(LocalDateTime.now())) {
-            System.out.println("token expired");
-            return "token expired";
-        }
-
-        // Proceed to confirm the token and enable the app user
-        confirmationTokenService.setConfirmedAt(token);
-        repository.enableAppUser(confirmationToken.getAppUser().getEmail());
-
-        System.out.println("confirmed");
-        return "confirmed";
-    }
-*/
 
 
 

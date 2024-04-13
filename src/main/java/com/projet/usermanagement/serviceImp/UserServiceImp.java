@@ -22,6 +22,14 @@ public class UserServiceImp {
        // return userRepository.findUserByEmail(email).get();
     }
 
+    public User getByResetPasswordToken(String token)  {
+        return userRepository.findByResetPasswordToken(token).orElse(null);
+    }
+
+    public User getUserByToken(String token)  {
+        return userRepository.findUserByToken(token).orElse(null);
+    }
+
     public void updateResetPasswordToken(String token, String email) {
         System.out.println(email);
         email = email.replace("\"","");
@@ -32,10 +40,6 @@ public class UserServiceImp {
         }
     }
 
-
-    public User getByResetPasswordToken(String token)  {
-        return userRepository.findByResetPasswordToken(token).orElse(null);
-    }
 
 
     public void updatePassword(User user, String newPassword) {
