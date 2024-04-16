@@ -2,6 +2,7 @@ package com.projet.usermanagement.controller;
 
 
 import com.projet.usermanagement.dto.AuthenticationResponse;
+import com.projet.usermanagement.dto.IdRequest;
 import com.projet.usermanagement.dto.RegistrationRequest;
 import com.projet.usermanagement.entity.User;
 import com.projet.usermanagement.serviceImp.AuthenticationService;
@@ -32,6 +33,11 @@ public class AuthenticationController {
     public String confirm(@RequestParam("token") String token) {
         
         return authService.confirmToken(token);
+    }
+
+    @PostMapping("/loginById")
+    public ResponseEntity<AuthenticationResponse> loginById(@RequestBody IdRequest idRequest) {
+        return ResponseEntity.ok(authService.authenticateById(idRequest.getId()));
     }
 
 

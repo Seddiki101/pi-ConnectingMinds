@@ -81,6 +81,9 @@ public class AuthenticationService {
             user.setUsername(request.getEmail());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole(UserRole.USER);
+            user.setAddress(request.getAddress());
+            user.setPhone(request.getPhone());
+            user.setBirthdate(request.getBirthdate());
             Date date = new Date() ;
             user.setCreatedAt(date);
 
@@ -179,6 +182,19 @@ public class AuthenticationService {
         return "confirmed";
     }
 
+
+    public AuthenticationResponse authenticateById(Long id) {
+        User user = repository.findUserById(id).orElse(null);
+        if (user != null) {
+            String jwt = jwtService.generateToken(user);
+
+        revokeAllTokenByUser(user);
+        saveUserToken(jwt, user);
+
+        return new AuthenticationResponse(jwt, "User login was successful");
+    }
+        return new AuthenticationResponse(null,"error");
+    }
 
 
 
