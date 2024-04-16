@@ -1,1 +1,1 @@
-This projects aims to provide various functionalities to esprit students
+This projects aims to provide various functionalities to esprit students and teachers
