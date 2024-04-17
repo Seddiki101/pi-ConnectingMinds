@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,10 +17,25 @@ public class UserServiceImp {
     @Autowired
     private final UserRepository userRepository;
 
+
+    public List<User> getAllUsers()
+    {
+        //maybe create a method in repo to get certain attributes
+        return userRepository.findAll();
+    }
+
     public User getUserbymail(String email)
     {
         return userRepository.findUserByEmail(email).orElse(null);
        // return userRepository.findUserByEmail(email).get();
+    }
+
+    public User getByResetPasswordToken(String token)  {
+        return userRepository.findByResetPasswordToken(token).orElse(null);
+    }
+
+    public User getUserByToken(String token)  {
+        return userRepository.findUserByToken(token).orElse(null);
     }
 
     public void updateResetPasswordToken(String token, String email) {
@@ -33,10 +49,6 @@ public class UserServiceImp {
     }
 
 
-    public User getByResetPasswordToken(String token)  {
-        return userRepository.findByResetPasswordToken(token).orElse(null);
-    }
-
 
     public void updatePassword(User user, String newPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -45,6 +57,11 @@ public class UserServiceImp {
 
         user.setResetPasswordToken(null);
         userRepository.save(user);
+    }
+
+    public void blockUser(Long id)
+    {
+        userRepository.blockUser(id);
     }
 
 

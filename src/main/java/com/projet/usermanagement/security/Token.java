@@ -1,6 +1,7 @@
 package com.projet.usermanagement.security;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.projet.usermanagement.entity.User;
 import jakarta.persistence.*;
 
@@ -21,6 +22,7 @@ public class Token {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     public Integer getId() {
