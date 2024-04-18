@@ -1,9 +1,7 @@
 package com.tn.esprit.kanbanboard.entity;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,10 +25,10 @@ public class Notification implements Serializable {
     @ManyToOne
     @JoinColumn(name = "group_id")
     @JsonIgnore
-    private Group group;
+    private Team team;
 
     @JsonGetter("groupId")
     public Long getGroupId() {
-        return (group != null) ? group.getGroupId() : null;
+        return (team != null) ? team.getGroupId() : null;
     }
 }

@@ -1,8 +1,8 @@
 package com.tn.esprit.kanbanboard.serviceImpl;
 
-import com.tn.esprit.kanbanboard.dao.GroupDao;
+import com.tn.esprit.kanbanboard.dao.TeamDao;
 import com.tn.esprit.kanbanboard.dao.TaskDao;
-import com.tn.esprit.kanbanboard.entity.Group;
+import com.tn.esprit.kanbanboard.entity.Team;
 import com.tn.esprit.kanbanboard.entity.Task;
 import com.tn.esprit.kanbanboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class TaskServiceImpl implements TaskService {
     private final TaskDao taskDao;
-    private final GroupDao groupDao;
+    private final TeamDao teamDao;
     @Autowired
-    public TaskServiceImpl(TaskDao taskDao,GroupDao groupDao) {
+    public TaskServiceImpl(TaskDao taskDao, TeamDao teamDao) {
         this.taskDao = taskDao;
-        this.groupDao = groupDao;
+        this.teamDao = teamDao;
     }
 
     @Override
@@ -32,10 +32,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task create(Long groupId,Task task) {
-        Optional<Group> optionalGroup = groupDao.findById(groupId);
+        Optional<Team> optionalGroup = teamDao.findById(groupId);
         if(optionalGroup.isPresent()){
-            Group group = optionalGroup.get();
-            task.setGroup(group);
+            Team team = optionalGroup.get();
+            task.setTeam(team);
             Task result = taskDao.save(task);
             return result;
         }

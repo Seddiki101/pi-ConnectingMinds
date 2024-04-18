@@ -1,6 +1,5 @@
 package com.tn.esprit.kanbanboard.controller;
 
-import com.tn.esprit.kanbanboard.entity.Group;
 import com.tn.esprit.kanbanboard.entity.Notification;
 import com.tn.esprit.kanbanboard.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;

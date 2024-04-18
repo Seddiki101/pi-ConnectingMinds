@@ -1,9 +1,9 @@
 package com.tn.esprit.kanbanboard.serviceImpl;
 
 import com.tn.esprit.kanbanboard.dao.EventDao;
-import com.tn.esprit.kanbanboard.dao.GroupDao;
+import com.tn.esprit.kanbanboard.dao.TeamDao;
 import com.tn.esprit.kanbanboard.entity.Event;
-import com.tn.esprit.kanbanboard.entity.Group;
+import com.tn.esprit.kanbanboard.entity.Team;
 import com.tn.esprit.kanbanboard.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,11 +14,11 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
 
     private final EventDao eventDao;
-    private final GroupDao groupDao;
+    private final TeamDao teamDao;
     @Autowired
-    public EventServiceImpl(EventDao eventDao,GroupDao groupDao) {
+    public EventServiceImpl(EventDao eventDao, TeamDao teamDao) {
         this.eventDao = eventDao;
-        this.groupDao = groupDao;
+        this.teamDao = teamDao;
     }
 
     @Override
@@ -33,13 +33,13 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event create(Long groupId,Event event) {
-        Optional<Group> optionalGroup = groupDao.findById(groupId);
+        Optional<Team> optionalGroup = teamDao.findById(groupId);
         if(optionalGroup.isPresent()){
-            Group group = optionalGroup.get();
-            event.setGroup(group);
+            Team team = optionalGroup.get();
+            event.setTeam(team);
             Event result = eventDao.save(event);
-            group.getEvents().add(event);
-            groupDao.save(group);
+            team.getEvents().add(event);
+            teamDao.save(team);
             return result;
         }
         System.out.println("Error : Group doesn't exist.");
@@ -55,13 +55,13 @@ public class EventServiceImpl implements EventService {
             updatedEvent.setDescription(event.getDescription());
             updatedEvent.setStartDate(event.getStartDate());
             updatedEvent.setEndDate(event.getEndDate());
-            Optional<Group> optionalGroup = groupDao.findById(updatedEvent.getGroup().getGroupId());
+            Optional<Team> optionalGroup = teamDao.findById(updatedEvent.getTeam().getGroupId());
             if(optionalGroup.isPresent()){
                 Event result = eventDao.save(updatedEvent);
-                Group group = optionalGroup.get();
-                group.getEvents().remove(optionalEvent.get());
-                group.getEvents().add(updatedEvent);
-                groupDao.save(group);
+                Team team = optionalGroup.get();
+                team.getEvents().remove(optionalEvent.get());
+                team.getEvents().add(updatedEvent);
+                teamDao.save(team);
                 return result;
             }
          }
@@ -71,11 +71,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void delete(Event event) {
-        Optional<Group> optionalGroup = groupDao.findById(event.getGroup().getGroupId());
+        Optional<Team> optionalGroup = teamDao.findById(event.getTeam().getGroupId());
         if(optionalGroup.isPresent()){
-            Group group = optionalGroup.get();
-            group.getEvents().remove(event);
-            groupDao.save(group);
+            Team team = optionalGroup.get();
+            team.getEvents().remove(event);
+            teamDao.save(team);
         }
         eventDao.delete(event);
     }

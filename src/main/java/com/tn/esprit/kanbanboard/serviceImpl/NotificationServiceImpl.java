@@ -1,8 +1,8 @@
 package com.tn.esprit.kanbanboard.serviceImpl;
 
-import com.tn.esprit.kanbanboard.dao.GroupDao;
+import com.tn.esprit.kanbanboard.dao.TeamDao;
 import com.tn.esprit.kanbanboard.dao.NotificationDao;
-import com.tn.esprit.kanbanboard.entity.Group;
+import com.tn.esprit.kanbanboard.entity.Team;
 import com.tn.esprit.kanbanboard.entity.Notification;
 import com.tn.esprit.kanbanboard.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +13,11 @@ import java.util.Optional;
 @Service
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationDao notificationDao;
-    private final GroupDao groupDao;
+    private final TeamDao teamDao;
     @Autowired
-    public NotificationServiceImpl(NotificationDao notificationDao,GroupDao groupDao) {
+    public NotificationServiceImpl(NotificationDao notificationDao, TeamDao teamDao) {
         this.notificationDao = notificationDao;
-        this.groupDao = groupDao;
+        this.teamDao = teamDao;
     }
 
     @Override
@@ -32,10 +32,10 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public Notification create(Long groupId,Notification notification) {
-        Optional<Group> optionalGroup = groupDao.findById(groupId);
+        Optional<Team> optionalGroup = teamDao.findById(groupId);
         if(optionalGroup.isPresent()){
-            Group group = optionalGroup.get();
-            notification.setGroup(group);
+            Team team = optionalGroup.get();
+            notification.setTeam(team);
             Notification result = notificationDao.save(notification);
             return result;
         }

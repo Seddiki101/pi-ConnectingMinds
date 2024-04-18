@@ -1,8 +1,5 @@
 package com.tn.esprit.kanbanboard.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,5 +25,5 @@ public class Project implements Serializable {
     private LocalDateTime endDate;
     private String resources;
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
-    private List<Group> groups = new ArrayList<>();
+    private List<Team> teams = new ArrayList<>();
 }
