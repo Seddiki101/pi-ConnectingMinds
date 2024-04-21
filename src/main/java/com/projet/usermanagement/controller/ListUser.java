@@ -38,7 +38,7 @@ public class ListUser {
     }
 
 
-    @PostMapping("/searchUsers")
+    @PostMapping("/admin_only/searchUsers")
     public List<User> searchUsers(@RequestBody SearchCriteria criteria) {
         System.out.println("search called "+criteria.getKeyword() );
         return userSearchService.findUsersByKeyword(criteria.getKeyword());
