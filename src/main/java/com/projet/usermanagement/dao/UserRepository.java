@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -14,7 +15,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional <User> findUserByEmail(String email) ;
     Optional <User> findUserById(Long id) ;
     Optional<User> findByResetPasswordToken(String token);
-    // Optional<User> findByUsername(String username);
+
+
+    List<User> findByIdIn(List<Long> ids);
 
     @Query("SELECT u FROM User u JOIN u.tokens t WHERE t.token = :token")
     Optional<User> findUserByToken(@Param("token") String token);

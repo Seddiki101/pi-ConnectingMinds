@@ -31,10 +31,16 @@ public class UserServiceImp {
         return userRepository.findAll();
     }
 
+    public User getUserById(Long id)
+    {
+        return userRepository.findUserById(id).orElse(null);
+    }
+
+
+
     public User getUserbymail(String email)
     {
         return userRepository.findUserByEmail(email).orElse(null);
-       // return userRepository.findUserByEmail(email).get();
     }
 
     public User getByResetPasswordToken(String token)  {
@@ -91,6 +97,11 @@ public class UserServiceImp {
         }
 
 
+    }
+
+
+    public List<User> getUsersByIds(List<Long> ids) {
+        return userRepository.findByIdIn(ids);
     }
 
 
