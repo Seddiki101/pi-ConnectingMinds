@@ -1,11 +1,16 @@
 package com.projet.usermanagement.serviceImp;
 
 import com.projet.usermanagement.dao.UserRepository;
+import com.projet.usermanagement.dto.AuthenticationResponse;
 import com.projet.usermanagement.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.projet.usermanagement.dto.RegistrationRequest;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
+import com.projet.usermanagement.dto.AuthenticationResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +22,8 @@ public class UserServiceImp {
     @Autowired
     private final UserRepository userRepository;
 
+    @Autowired
+    private UserValidator userValidator;
 
     public List<User> getAllUsers()
     {
@@ -62,6 +69,28 @@ public class UserServiceImp {
     public void blockUser(Long id)
     {
         userRepository.blockUser(id);
+    }
+
+
+    public void updateUser(User user,RegistrationRequest request)
+    {
+
+        Errors errors = new BeanPropertyBindingResult(request, "registrationRequest");
+        userValidator.validate(request, errors);
+
+
+        if ( ! errors.hasErrors() ) {
+
+            user.setFirstName(request.getFirstName() );
+            user.setLastName(request.getLastName() );
+            user.setEmail(request.getEmail() );
+            user.setPhone(request.getPhone() );
+            user.setAddress( request.getAddress() );
+
+            userRepository.save(user);
+        }
+
+
     }
 
 
