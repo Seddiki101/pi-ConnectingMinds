@@ -26,6 +26,7 @@ public class ListUser {
     @PostMapping
     public String blockUser(@RequestBody IdRequest idRequest)
     {
+        System.out.println("the received request " + idRequest );
         userService.blockUser( idRequest.getId() );
     //
     return "Request is being processed";

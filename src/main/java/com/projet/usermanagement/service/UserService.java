@@ -1,4 +1,23 @@
 package com.projet.usermanagement.service;
 
-public class UserService {
+import com.projet.usermanagement.entity.User;
+
+import java.util.List;
+
+public interface UserService {
+
+    List<User> getAllUsers();
+
+    User getUserByEmail(String email);
+
+    User getByResetPasswordToken(String token);
+
+    User getUserByToken(String token);
+
+    void updateResetPasswordToken(String token, String email);
+
+    void updatePassword(User user, String newPassword);
+
+    void blockUser(Long id);
+
 }

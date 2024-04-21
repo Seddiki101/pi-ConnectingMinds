@@ -20,6 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.Errors;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -48,7 +51,10 @@ public class AuthenticationService {
     @Autowired
     private EmailSender emailSender;
 
-
+    @Autowired
+    private UserValidator userValidator;
+//old mail verificaiton , doesn t use validator
+/*
     private static final String EMAIL_PATTERN =
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
@@ -61,13 +67,19 @@ public class AuthenticationService {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-
+*/
 
     public AuthenticationResponse register(RegistrationRequest request) {
 
-        if (!validateEmail(request.getEmail())) {
+        Errors errors = new BeanPropertyBindingResult(request, "registrationRequest");
+        // Perform validation
+        userValidator.validate(request, errors);
+
+        //!validateEmail(request.getEmail())
+
+        if ( errors.hasErrors() ) {
             return new AuthenticationResponse(null, "email is not valid ");
-            // throw new IllegalStateException("Your email is not valid");
+
         } else {
 
             // check if user already exist. if exist than authenticate the user
