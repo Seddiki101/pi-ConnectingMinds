@@ -7,16 +7,22 @@ import com.maryem.forum.entities.Reponse;
 import com.maryem.forum.services.ReponseService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
+
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
 
 @Service
 public class ReponseServiceImpl implements ReponseService {
@@ -29,6 +35,34 @@ public class ReponseServiceImpl implements ReponseService {
     private static final String ERROR_NON_PRESENT_ID = "Cannot find an answer with id : %s";
 
     private static final String ERROR_UPDATE = "Error occured while updating";
+    private void sendEmail(String to, String subject, String body) throws MessagingException {
+
+        String from = "techwork414@gmail.com";
+        String password = "pacrvzlvscatwwkb";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        });
+
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(from));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+        message.setSubject(subject);
+        //   message.setText(body);
+        message.setContent(body, "text/html");
+
+        Transport.send(message);
+    }
+
     @Override
     @Transactional
     public Reponse ajouterReponse(String contenu, int idQuestion, MultipartFile imageFile) {
@@ -69,9 +103,23 @@ public class ReponseServiceImpl implements ReponseService {
         // Mettre à jour la date de création si elle est nulle
         newReponse.setCreatedAt(LocalDateTime.now());
 
+
+
+        String to = "zouaouimaryem327@gmail.com";
+        String subject = "New answer Added";
+        String body = "A new answer has been added with details:";
+
+        try {
+            sendEmail(to, subject, body);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+
         // Enregistrer la réponse dans la base de données
         return reponseRepository.save(newReponse);
+
     }
+
 
 
     @Override
@@ -127,6 +175,27 @@ public class ReponseServiceImpl implements ReponseService {
     }
 
     @Override
+    public void DeleteAnswerById(int id) {
+        reponseRepository.deleteById(id);
+    }
+
+    @Override
+    public Reponse ReponseById(int id) {
+        Reponse reponse = null;
+        if (id!= 0) {
+            final Optional<Reponse> optionalReponse= this.reponseRepository.findById(id);
+            if (optionalReponse.isPresent()) {
+                reponse = optionalReponse.get();
+            } else {
+                LOG.info(String.format(ERROR_NON_PRESENT_ID, id));
+            }
+        } else {
+            LOG.error(ERROR_NULL_ID);
+        }
+        return reponse;
+    }
+
+    @Override
     public List<Reponse> getAllAnswers() {
         return reponseRepository.findAll();
     }
@@ -144,6 +213,25 @@ public class ReponseServiceImpl implements ReponseService {
 
         // Récupérer toutes les réponses associées à cette question
         return reponseRepository.findByQuestion(question);
+    }
+
+    @Override
+    public Reponse updateReponseById(Reponse reponse, int id) {
+        Optional<Reponse>optionalReponse = reponseRepository.findById(id);
+        if(optionalReponse.isPresent()){
+            LocalDateTime modified = LocalDateTime.now();
+            Reponse updatedReponse = optionalReponse.get();
+            updatedReponse.setContenu(reponse.getContenu());
+            //updatedQuestion.setImage(question.getImage());
+            updatedReponse.setUpdatedAt(modified);
+            //updatedQuestion.setImage(question.getImage());
+            Reponse result = reponseRepository.save(updatedReponse);
+            System.out.println("updated");
+            return result;
+        }
+        System.out.println(">Reponse doesn't exist!!");
+
+        return null;
     }
 }
 

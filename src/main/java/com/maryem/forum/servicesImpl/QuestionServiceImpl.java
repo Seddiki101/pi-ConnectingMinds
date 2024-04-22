@@ -6,6 +6,7 @@ import com.maryem.forum.services.QuestionService;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hibernate.id.SequenceMismatchStrategy.LOG;
 
@@ -30,6 +32,8 @@ public class QuestionServiceImpl implements QuestionService {
     QuestionRepository questionRepository;
 
 
+
+
     @Override
     public Question ajouterQuestion(String contenu, MultipartFile imageFile) throws IOException {
         if (!StringUtils.isEmpty(contenu)) {
@@ -44,16 +48,19 @@ public class QuestionServiceImpl implements QuestionService {
             if (newQuestion.getCreatedAt() == null) {
                 newQuestion.setCreatedAt(LocalDateTime.now());
             }
+
             return questionRepository.save(newQuestion);
         } else {
             LOG.error("Le contenu ne peut pas être vide");
             return null;
         }
+
+
     }
 
 
 
-    @Override
+  /*  @Override
     public Question updateQuestion(Question question) {
         // Vérifier si la question n'est pas null
         if (question != null) {
@@ -85,45 +92,70 @@ public class QuestionServiceImpl implements QuestionService {
 
             return null;
         }
-    }
+    }*/
+
 
     @Override
-    public void DeleteQuestion(Question question) {
-        if (question != null) {
-        questionRepository.delete(question);}
-           else {
-            // Gérer l'erreur si la question est null
-            LOG.error(ERROR_NON_PRESENT_ID);
-
-            }
-        if (question == null) {
-
-            // Gérer l'erreur si la question est null
-            LOG.error(ERROR_NULL_ID);
-
-
-        }
+    public void DeleteQuestion(int id) {
+        questionRepository.deleteById(id);
 
     }
+
+
+
 
     @Override
     public List<Question> getAllQuestion() {
         return questionRepository.findAll();
     }
 
+    @Override
+    public Question QuestionById(int id) {
+        Question question = null;
+        if (id!= 0) {
+            final Optional<Question> optionalQuestion = this.questionRepository.findById(id);
+            if (optionalQuestion.isPresent()) {
+                question = optionalQuestion.get();
+            } else {
+                LOG.info(String.format(ERROR_NON_PRESENT_ID, id));
+            }
+        } else {
+            LOG.error(ERROR_NULL_ID);
+        }
+        return question;
+    }
+
+    @Override
+    public Question updateQuestionById(Question question, int id) {
+        Optional<Question>optionalQuestion = questionRepository.findById(id);
+        if(optionalQuestion.isPresent()){
+            LocalDateTime modified = LocalDateTime.now();
+            Question updatedQuestion = optionalQuestion.get();
+            updatedQuestion.setContenu(question.getContenu());
+            //updatedQuestion.setImage(question.getImage());
+            updatedQuestion.setUpdatedAt(modified);
+            //updatedQuestion.setImage(question.getImage());
+            Question result = questionRepository.save(updatedQuestion);
+            System.out.println("updated");
+            return result;
+        }
+        System.out.println(">Question doesn't exist!!");
+
+        return null;
+    }
+
     //@Override
     //public Question ajouterQuestionI(String contenu, MultipartFile file) {
-        //Question p =new Question();
-       /// String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-       // p.setContenu(contenu);
-       // try {
-         //   p.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
-       // } catch (IOException e) {
-          //  throw new RuntimeException(e);
-        //}
-      //  return questionRepository.save(p);
-  //  }
+    //Question p =new Question();
+    /// String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+    // p.setContenu(contenu);
+    // try {
+    //   p.setImage(Base64.getEncoder().encodeToString(file.getBytes()));
+    // } catch (IOException e) {
+    //  throw new RuntimeException(e);
+    //}
+    //  return questionRepository.save(p);
+    //  }
 
 
 }
-

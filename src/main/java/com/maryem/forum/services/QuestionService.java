@@ -9,8 +9,12 @@ import java.util.List;
 public interface QuestionService {
 
    public Question ajouterQuestion(String contenu, MultipartFile imageFile) throws IOException;
-   public Question updateQuestion(Question question );
-   public void DeleteQuestion(Question question) ;
+
+   public void DeleteQuestion(int id);
    public List<Question> getAllQuestion();
+   Question QuestionById(int id);
    //public Question ajouterQuestionI (String contenu , MultipartFile file);
-}
+   public Question updateQuestionById(Question question, int id) ;
+
+
+   }
