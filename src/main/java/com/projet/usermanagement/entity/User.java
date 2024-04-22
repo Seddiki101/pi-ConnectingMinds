@@ -2,6 +2,7 @@ package com.projet.usermanagement.entity;
 
 import com.projet.usermanagement.security.Token;
 import jakarta.persistence.*;
+//import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,8 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 
 @Entity
+@Indexed
 @Table(name = "user")
 @Getter
 @Setter
@@ -24,12 +28,15 @@ public class User implements UserDetails {
     private Long userId;
 
     @Column(name = "firstName")
+    @FullTextField
     private String firstName;
 
     @Column(name = "lastName")
+    @FullTextField
     private String lastName;
 
     @Column(name = "email")
+    @FullTextField
     private String email;
 
     @Column(name = "password")
@@ -38,9 +45,11 @@ public class User implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private UserRole role ;
 
-
+    @FullTextField
     private String phone;
+    @FullTextField
     private String address;
+
     @Temporal(TemporalType.DATE)
     private Date birthdate;
     @Temporal(TemporalType.DATE)

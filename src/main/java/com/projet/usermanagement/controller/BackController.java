@@ -3,12 +3,13 @@ package com.projet.usermanagement.controller;
 import com.projet.usermanagement.entity.User;
 import com.projet.usermanagement.serviceImp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
+@RequestMapping("/back/user")
 public class BackController {
 
     @Autowired
@@ -25,6 +26,30 @@ public class BackController {
             return user;
         }
         return null;
+    }
+
+
+
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/ids")
+    public ResponseEntity<List<User>> getUsersByIds(@RequestBody List<Long> ids) {
+        List<User> users = userService.getUsersByIds(ids);
+        return ResponseEntity.ok(users);
     }
 
 
