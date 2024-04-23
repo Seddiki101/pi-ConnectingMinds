@@ -76,6 +76,10 @@ public class UserServiceImp {
     {
         userRepository.blockUser(id);
     }
+    public void blockUser2(String email)
+    {
+        userRepository.blockUser2(email);
+    }
 
 
     public void updateUser(User user,RegistrationRequest request)

@@ -36,4 +36,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void blockUser(Long id);
 
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE User a " +
+            "SET a.locked = TRUE WHERE a.email = ?1")
+    void blockUser2(String email);
+
+
+
 }

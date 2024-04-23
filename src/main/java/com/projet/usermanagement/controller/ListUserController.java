@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class ListUser {
+public class ListUserController {
 
     @Autowired
     private UserServiceImp userService;
@@ -26,16 +26,27 @@ public class ListUser {
         return userService.getAllUsers();
     }
 
-
+/*
     @RequestMapping("/admin_only/BlockUser")
     @PostMapping
     public String blockUser(@RequestBody IdRequest idRequest)
     {
         System.out.println("the received request " + idRequest );
         userService.blockUser( idRequest.getId() );
-    //
     return "Request is being processed";
     }
+    */
+
+
+
+    @RequestMapping("/admin_only/BlockUser")
+    @PostMapping
+    public String blockUser2(@RequestBody String email)
+    {
+        userService.blockUser2( email );
+        return "Request is being processed";
+    }
+
 
 
     @PostMapping("/admin_only/searchUsers")
