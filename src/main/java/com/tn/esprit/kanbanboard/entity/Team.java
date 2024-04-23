@@ -18,7 +18,7 @@ import java.util.List;
 public class Team implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long groupId;
+    private Long teamId;
     private String name;
     private String description;
     private Long scrumMaster;
@@ -28,11 +28,11 @@ public class Team implements Serializable {
     @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;
-    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "team",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Notification> notifications = new ArrayList<>();
-    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "team",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Event> events = new ArrayList<>();
-    @OneToMany(mappedBy = "group",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "team",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
     @JsonGetter("projectId")

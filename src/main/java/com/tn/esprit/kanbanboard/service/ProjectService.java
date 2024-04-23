@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface ProjectService {
     List<Project> findAll();
+    List<Project> findByOwnerId(Long ownerId);
     Optional<Project> findById(Long ID);
     Project create(Project project);
     Project update(Project project);

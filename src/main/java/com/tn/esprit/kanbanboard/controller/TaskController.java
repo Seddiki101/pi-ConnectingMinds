@@ -29,8 +29,8 @@ public class TaskController {
         return optionalTask.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
     @PostMapping("/task/{id}")
-    public ResponseEntity<Task> createTask(@PathVariable("id") Long groupId,@RequestBody Task task){
-        Task result = taskService.create(groupId, task);
+    public ResponseEntity<Task> createTask(@PathVariable("id") Long teamId,@RequestBody Task task){
+        Task result = taskService.create(teamId, task);
         return result!=null ? ResponseEntity.ok(result) : ResponseEntity.badRequest().build();
     }
     @PutMapping("/task")

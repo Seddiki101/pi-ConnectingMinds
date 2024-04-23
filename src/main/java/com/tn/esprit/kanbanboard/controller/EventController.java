@@ -30,8 +30,8 @@ public class EventController {
         return optionalEvent.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
     @PostMapping("/event/{id}")
-    public ResponseEntity<Event> createEvent(@PathVariable("id") Long groupId,@RequestBody Event event){
-        Event result = eventService.create(groupId,event);
+    public ResponseEntity<Event> createEvent(@PathVariable("id") Long teamId,@RequestBody Event event){
+        Event result = eventService.create(teamId,event);
         return result!=null ? ResponseEntity.ok(result) : ResponseEntity.badRequest().build();
     }
     @PutMapping("/event")

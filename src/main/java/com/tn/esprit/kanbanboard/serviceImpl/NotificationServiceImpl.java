@@ -31,15 +31,15 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification create(Long groupId,Notification notification) {
-        Optional<Team> optionalGroup = teamDao.findById(groupId);
-        if(optionalGroup.isPresent()){
-            Team team = optionalGroup.get();
+    public Notification create(Long teamId,Notification notification) {
+        Optional<Team> optionalTeam = teamDao.findById(teamId);
+        if(optionalTeam.isPresent()){
+            Team team = optionalTeam.get();
             notification.setTeam(team);
             Notification result = notificationDao.save(notification);
             return result;
         }
-        System.out.println("Error : Group doesn't exist.");
+        System.out.println("Error : Team doesn't exist.");
         return null;
     }
 

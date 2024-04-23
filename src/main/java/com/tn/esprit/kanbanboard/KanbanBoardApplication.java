@@ -2,11 +2,15 @@ package com.tn.esprit.kanbanboard;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
+@Configuration
+@ConfigurationPropertiesScan("com.tn.esprit.kanbanboard.blob")
 public class KanbanBoardApplication {
 
 	public static void main(String[] args) {

@@ -23,12 +23,12 @@ public class Event implements Serializable {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "team_id")
     @JsonIgnore
     private Team team;
 
-    @JsonGetter("groupId")
-    public Long getGroupId() {
-        return (team != null) ? team.getGroupId() : null;
+    @JsonGetter("teamId")
+    public Long getTeamId() {
+        return (team != null) ? team.getTeamId() : null;
     }
 }

@@ -30,8 +30,8 @@ public class NotificationController {
         return optionalNotification.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
     @PostMapping("/notification/{id}")
-    public ResponseEntity<Notification> createNotification(@PathVariable("id") Long groupId,@RequestBody Notification notification){
-        Notification result = notificationService.create(groupId,notification);
+    public ResponseEntity<Notification> createNotification(@PathVariable("id") Long teamId,@RequestBody Notification notification){
+        Notification result = notificationService.create(teamId,notification);
         return result!=null ? ResponseEntity.ok(result) : ResponseEntity.badRequest().build();
     }
     @PutMapping("/notification")

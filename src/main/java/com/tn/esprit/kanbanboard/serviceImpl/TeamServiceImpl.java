@@ -45,9 +45,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team update(Team team) {
-        Optional<Team> oldGroup = teamDao.findById(team.getGroupId());
-        if(oldGroup.isPresent()){
-            Team updatedTeam = oldGroup.get();
+        Optional<Team> oldTeam = teamDao.findById(team.getTeamId());
+        if(oldTeam.isPresent()){
+            Team updatedTeam = oldTeam.get();
             updatedTeam.setName(team.getName());
             updatedTeam.setDescription(team.getDescription());
             updatedTeam.setScrumMaster(team.getScrumMaster());
@@ -55,7 +55,7 @@ public class TeamServiceImpl implements TeamService {
             Team result = teamDao.save(updatedTeam);
             return result;
         }
-        System.out.println("Error : The Group doesn't exist to update.");
+        System.out.println("Error : The Team doesn't exist to update.");
         return null;
     }
 
@@ -69,7 +69,7 @@ public class TeamServiceImpl implements TeamService {
 //            project.getTeams().remove(team);
 //            projectDao.save(project);
         } catch (Exception e) {
-            System.out.println("Error deleting group: " + e.getMessage());
+            System.out.println("Error deleting Team: " + e.getMessage());
         }
     }
 }

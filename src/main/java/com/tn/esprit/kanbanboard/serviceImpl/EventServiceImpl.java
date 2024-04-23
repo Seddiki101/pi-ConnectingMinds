@@ -32,17 +32,17 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public Event create(Long groupId,Event event) {
-        Optional<Team> optionalGroup = teamDao.findById(groupId);
-        if(optionalGroup.isPresent()){
-            Team team = optionalGroup.get();
+    public Event create(Long teamId,Event event) {
+        Optional<Team> optionalTeam = teamDao.findById(teamId);
+        if(optionalTeam.isPresent()){
+            Team team = optionalTeam.get();
             event.setTeam(team);
             Event result = eventDao.save(event);
             team.getEvents().add(event);
             teamDao.save(team);
             return result;
         }
-        System.out.println("Error : Group doesn't exist.");
+        System.out.println("Error : Team doesn't exist.");
         return null;
     }
 
@@ -55,10 +55,10 @@ public class EventServiceImpl implements EventService {
             updatedEvent.setDescription(event.getDescription());
             updatedEvent.setStartDate(event.getStartDate());
             updatedEvent.setEndDate(event.getEndDate());
-            Optional<Team> optionalGroup = teamDao.findById(updatedEvent.getTeam().getGroupId());
-            if(optionalGroup.isPresent()){
+            Optional<Team> optionalTeam = teamDao.findById(updatedEvent.getTeam().getTeamId());
+            if(optionalTeam.isPresent()){
                 Event result = eventDao.save(updatedEvent);
-                Team team = optionalGroup.get();
+                Team team = optionalTeam.get();
                 team.getEvents().remove(optionalEvent.get());
                 team.getEvents().add(updatedEvent);
                 teamDao.save(team);
@@ -71,9 +71,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void delete(Event event) {
-        Optional<Team> optionalGroup = teamDao.findById(event.getTeam().getGroupId());
-        if(optionalGroup.isPresent()){
-            Team team = optionalGroup.get();
+        Optional<Team> optionalTeam = teamDao.findById(event.getTeam().getTeamId());
+        if(optionalTeam.isPresent()){
+            Team team = optionalTeam.get();
             team.getEvents().remove(event);
             teamDao.save(team);
         }

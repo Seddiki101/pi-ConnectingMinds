@@ -31,15 +31,15 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task create(Long groupId,Task task) {
-        Optional<Team> optionalGroup = teamDao.findById(groupId);
-        if(optionalGroup.isPresent()){
-            Team team = optionalGroup.get();
+    public Task create(Long teamId,Task task) {
+        Optional<Team> optionalTeam = teamDao.findById(teamId);
+        if(optionalTeam.isPresent()){
+            Team team = optionalTeam.get();
             task.setTeam(team);
             Task result = taskDao.save(task);
             return result;
         }
-        System.out.println("Error : Group doesn't exist.");
+        System.out.println("Error : Team doesn't exist.");
         return null;
     }
 
