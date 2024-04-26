@@ -16,6 +16,10 @@ import java.util.Optional;
 public class ReponseController {
     @Resource
     ReponseService reponseService;
+    @GetMapping("/searchR")
+    public List<Reponse> searchPosts(@RequestParam("contenu") String contenu) {
+        return reponseService.searchComments(contenu);
+    }
 
     @PutMapping("/updateReponse/{id}")
     public ResponseEntity<Reponse> updateReponseById(@PathVariable("id") int id,
@@ -39,12 +43,13 @@ public class ReponseController {
     }
     @PostMapping("/addResponse/{idQuestion}")
     public Reponse ajouterReponse(
-            @RequestParam("contenu") String contenu,
+            @RequestParam String contenu,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @PathVariable int idQuestion
     ) {
         return reponseService.ajouterReponse(contenu, idQuestion, imageFile);
     }
+
 
 
 

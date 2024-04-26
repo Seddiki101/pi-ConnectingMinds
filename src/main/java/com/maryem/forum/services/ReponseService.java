@@ -16,4 +16,6 @@ public interface ReponseService {
     public List<Reponse> getAllAnswers();
     public List<Reponse> getAllAnswersForQuestion(int idQuestion);
     public Reponse updateReponseById(Reponse reponse, int id) ;
+    List<Reponse> searchComments(String contenu);
+
 }

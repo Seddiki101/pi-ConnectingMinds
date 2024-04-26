@@ -5,14 +5,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+@Repository
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE Question q "  // Use 'q' as the entity alias
-            + "SET q.Contenu = ?1, "  // Use comma (,) to separate updates
-            + "q.image = ?2 "
-            + "WHERE q.idQuestion = ?3")
-    int updateQuestion(String contenu, String image, int id); // Use a descriptive method name
+
+    @Query("SELECT r FROM Question r WHERE r.Contenu LIKE CONCAT('%', :contenu, '%')")
+    List<Question> findByContenu(String contenu);
 }

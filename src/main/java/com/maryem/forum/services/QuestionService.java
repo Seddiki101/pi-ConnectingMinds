@@ -15,6 +15,7 @@ public interface QuestionService {
    Question QuestionById(int id);
    //public Question ajouterQuestionI (String contenu , MultipartFile file);
    public Question updateQuestionById(Question question, int id) ;
+   List<Question> searchPosts(String contenu);
 
 
    }

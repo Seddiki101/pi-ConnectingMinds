@@ -115,6 +115,10 @@ public class QuestionController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/search")
+    public List<Question> searchPosts(@RequestParam("contenu") String contenu) {
+        return questionService.searchPosts(contenu);
+    }
 
 
 

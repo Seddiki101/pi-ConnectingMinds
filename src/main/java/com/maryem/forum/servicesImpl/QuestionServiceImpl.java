@@ -2,6 +2,7 @@ package com.maryem.forum.servicesImpl;
 
 import com.maryem.forum.daos.QuestionRepository;
 import com.maryem.forum.entities.Question;
+import com.maryem.forum.services.BadWordsFilter;
 import com.maryem.forum.services.QuestionService;
 import jakarta.annotation.Resource;
 import org.slf4j.Logger;
@@ -31,6 +32,9 @@ public class QuestionServiceImpl implements QuestionService {
     @Resource
     QuestionRepository questionRepository;
 
+    @Autowired
+    private BadWordsFilter badWordsFilter;
+
 
 
 
@@ -38,7 +42,8 @@ public class QuestionServiceImpl implements QuestionService {
     public Question ajouterQuestion(String contenu, MultipartFile imageFile) throws IOException {
         if (!StringUtils.isEmpty(contenu)) {
             Question newQuestion = new Question();
-            newQuestion.setContenu(contenu);
+            String filteredContenu = badWordsFilter.filter(contenu);
+            newQuestion.setContenu(filteredContenu);
 
             // Vérifier si une image a été fournie
             if (imageFile != null && !imageFile.isEmpty()) {
@@ -131,7 +136,9 @@ public class QuestionServiceImpl implements QuestionService {
         if(optionalQuestion.isPresent()){
             LocalDateTime modified = LocalDateTime.now();
             Question updatedQuestion = optionalQuestion.get();
-            updatedQuestion.setContenu(question.getContenu());
+            //updatedQuestion.setContenu(question.getContenu());
+            String filteredContenu = badWordsFilter.filter(question.getContenu());
+            updatedQuestion.setContenu(filteredContenu);
             //updatedQuestion.setImage(question.getImage());
             updatedQuestion.setUpdatedAt(modified);
             //updatedQuestion.setImage(question.getImage());
@@ -142,6 +149,11 @@ public class QuestionServiceImpl implements QuestionService {
         System.out.println(">Question doesn't exist!!");
 
         return null;
+    }
+
+    @Override
+    public List<Question> searchPosts(String contenu) {
+        return questionRepository.findByContenu(contenu);
     }
 
     //@Override

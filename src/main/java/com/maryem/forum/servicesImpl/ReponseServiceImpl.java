@@ -4,6 +4,7 @@ import com.maryem.forum.daos.QuestionRepository;
 import com.maryem.forum.daos.ReponseRepository;
 import com.maryem.forum.entities.Question;
 import com.maryem.forum.entities.Reponse;
+import com.maryem.forum.services.BadWordsFilter;
 import com.maryem.forum.services.ReponseService;
 import io.micrometer.common.util.StringUtils;
 import jakarta.annotation.Resource;
@@ -11,6 +12,7 @@ import jakarta.annotation.Resource;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +32,8 @@ public class ReponseServiceImpl implements ReponseService {
     ReponseRepository reponseRepository;
     @Resource
     QuestionRepository questionRepository;
+    @Autowired
+    private BadWordsFilter badWordsFilter;
     private static final Logger LOG = LoggerFactory.getLogger(QuestionServiceImpl.class);
     private static final String ERROR_NULL_ID = "Posted ID is NULL";
     private static final String ERROR_NON_PRESENT_ID = "Cannot find an answer with id : %s";
@@ -85,7 +89,8 @@ public class ReponseServiceImpl implements ReponseService {
         Reponse newReponse = new Reponse();
 
         // Copier le contenu fourni
-        newReponse.setContenu(contenu);
+        String filteredContenu = badWordsFilter.filter(contenu);
+        newReponse.setContenu(filteredContenu);
 
         // Vérifier si une image a été fournie
         if (imageFile != null && !imageFile.isEmpty()) {
@@ -221,7 +226,8 @@ public class ReponseServiceImpl implements ReponseService {
         if(optionalReponse.isPresent()){
             LocalDateTime modified = LocalDateTime.now();
             Reponse updatedReponse = optionalReponse.get();
-            updatedReponse.setContenu(reponse.getContenu());
+            String filteredContenu = badWordsFilter.filter(reponse.getContenu());
+            updatedReponse.setContenu(filteredContenu);
             //updatedQuestion.setImage(question.getImage());
             updatedReponse.setUpdatedAt(modified);
             //updatedQuestion.setImage(question.getImage());
@@ -232,6 +238,11 @@ public class ReponseServiceImpl implements ReponseService {
         System.out.println(">Reponse doesn't exist!!");
 
         return null;
+    }
+
+    @Override
+    public List<Reponse> searchComments(String contenu) {
+        return reponseRepository.findByContenu(contenu);
     }
 }
 
