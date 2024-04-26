@@ -30,6 +30,20 @@ public class BackController {
 
 
 
+    @RequestMapping("/getUserSpot")
+    @GetMapping
+    public Long getUserId(@RequestHeader("Authorization") String token) {
+        System.out.println("user back request ");
+        token = token.substring(7);
+        User user = userService.getUserByToken(token);
+        if (user != null) {
+            return user.getUserId();
+        }
+        return null;
+    }
+
+
+
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
