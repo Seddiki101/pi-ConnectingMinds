@@ -30,17 +30,17 @@ public class BackController {
 
 
 
-    @RequestMapping("/getUserSpot")
-    @GetMapping
-    public Long getUserId(@RequestHeader("Authorization") String token) {
-        System.out.println("user back request ");
+    @GetMapping("/getUserSpot")
+    public ResponseEntity<Long> getUserId(@RequestHeader("Authorization") String token) {
+        System.out.println("User back request received.");
         token = token.substring(7);
         User user = userService.getUserByToken(token);
         if (user != null) {
-            return user.getUserId();
+            return ResponseEntity.ok(user.getUserId());
         }
-        return null;
+        return ResponseEntity.notFound().build();
     }
+
 
 
 
