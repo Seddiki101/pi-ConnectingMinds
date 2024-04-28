@@ -96,6 +96,7 @@ public class AuthenticationService {
             user.setAddress(request.getAddress());
             user.setPhone(request.getPhone());
             user.setBirthdate(request.getBirthdate());
+            user.setPic( generatePic( request.getFirstName() ) );
             Date date = new Date() ;
             user.setCreatedAt(date);
 
@@ -208,6 +209,14 @@ public class AuthenticationService {
         return new AuthenticationResponse(null,"error");
     }
 
+
+    public String generatePic(String name) {
+        if (name != null && !name.isEmpty() && name.matches("[a-zA-Z]+")) {
+            char firstLetter = Character.toUpperCase(name.charAt(0));
+            return "assets/profl/" + firstLetter + ".png";
+        }
+        return "assets/profl/default.png";
+    }
 
 
 

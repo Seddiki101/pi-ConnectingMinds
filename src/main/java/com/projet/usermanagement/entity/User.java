@@ -49,6 +49,8 @@ public class User implements UserDetails {
     private String phone;
     @FullTextField
     private String address;
+    @FullTextField
+    private String pic;
 
     @Temporal(TemporalType.DATE)
     private Date birthdate;
