@@ -36,6 +36,11 @@ public class ProjectController {
         List<Project> projects = projectService.findByOwnerId(id);
         return ResponseEntity.ok(projects);
     }
+    @GetMapping("/project/unique-names/{name}")
+    public ResponseEntity<Project> getProjectByName(@PathVariable("name") String name){
+        Optional<Project> project = projectService.findByName(name);
+        return project.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
     @GetMapping("/project/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable("id") Long id){
         Optional<Project> project = projectService.findById(id);
@@ -47,8 +52,10 @@ public class ProjectController {
         UploadedFile information = new UploadedFile();
         if (file != null && !file.isEmpty()) {
             information = blobService.storeFile(file.getOriginalFilename(),file.getInputStream(), file.getSize());
-            project.setImageName(information.getUniqueFileName());
-            project.setImageUrl(information.getUrl());
+            if(information.getUniqueFileName() != null && information.getUrl() != null){
+                project.setImageName(information.getUniqueFileName());
+                project.setImageUrl(information.getUrl());
+            }
         }
         Project result = projectService.create(project);
         if (result != null) {
@@ -66,7 +73,7 @@ public class ProjectController {
             }else{
                 information = blobService.updateFile(project.getImageName(),file.getOriginalFilename(),file.getInputStream(), file.getSize());
             }
-            if(!information.getUniqueFileName().isEmpty() && !information.getUrl().isEmpty()){
+            if(information.getUniqueFileName() != null && information.getUrl() != null){
                 project.setImageName(information.getUniqueFileName());
                 project.setImageUrl(information.getUrl());
             }

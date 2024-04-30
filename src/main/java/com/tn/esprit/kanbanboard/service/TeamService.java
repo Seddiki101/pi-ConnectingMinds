@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface TeamService {
     List<Team> findAll();
     Optional<Team> findById(Long ID);
+    Optional<Team> findByName(String name);
     Team create(Long projectId, Team team);
     Team update(Team team);
     void delete(Team team);

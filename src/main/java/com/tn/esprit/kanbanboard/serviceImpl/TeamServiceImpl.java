@@ -29,6 +29,10 @@ public class TeamServiceImpl implements TeamService {
     public Optional<Team> findById(Long ID) {
         return teamDao.findById(ID);
     }
+    @Override
+    public Optional<Team> findByName(String name) {
+        return teamDao.findByName(name);
+    }
 
     @Override
     public Team create(Long projectId, Team team) {
@@ -52,6 +56,8 @@ public class TeamServiceImpl implements TeamService {
             updatedTeam.setDescription(team.getDescription());
             updatedTeam.setScrumMaster(team.getScrumMaster());
             updatedTeam.setMembers(team.getMembers());
+            updatedTeam.setImageName(team.getImageName());
+            updatedTeam.setImageUrl(team.getImageUrl());
             Team result = teamDao.save(updatedTeam);
             return result;
         }
@@ -64,10 +70,9 @@ public class TeamServiceImpl implements TeamService {
         try {
             team.getMembers().clear();
             teamDao.save(team);
-            teamDao.delete(team);
-//            Project project = team.getProject();
-//            project.getTeams().remove(team);
-//            projectDao.save(project);
+            Project project = team.getProject();
+            project.getTeams().remove(team);
+            projectDao.save(project);
         } catch (Exception e) {
             System.out.println("Error deleting Team: " + e.getMessage());
         }

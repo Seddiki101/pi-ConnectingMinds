@@ -22,6 +22,8 @@ public class Team implements Serializable {
     private String name;
     private String description;
     private Long scrumMaster;
+    private String imageUrl;
+    private String imageName;
     @ElementCollection
     private List<Long> members = new ArrayList<>();
     @ManyToOne

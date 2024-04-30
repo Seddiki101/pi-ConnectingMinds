@@ -1,6 +1,8 @@
 package com.tn.esprit.kanbanboard.controller;
 
+import com.tn.esprit.kanbanboard.entity.Project;
 import com.tn.esprit.kanbanboard.entity.Task;
+import com.tn.esprit.kanbanboard.service.ProjectService;
 import com.tn.esprit.kanbanboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +15,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class TaskController {
     private final TaskService taskService;
+    private final ProjectService projectService;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService,ProjectService projectService) {
         this.taskService = taskService;
+        this.projectService = projectService;
     }
     @GetMapping("/task")
     public ResponseEntity<List<Task>> getAllTasks(){
@@ -27,6 +31,15 @@ public class TaskController {
     public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id){
         Optional<Task> optionalTask = taskService.findById(id);
         return optionalTask.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping("/task/project/{id}")
+    public ResponseEntity<List<Task>> getUpcomingTasksByProjectId(@PathVariable("id") Long projectId){
+        Optional<Project> optionalProject = projectService.findById(projectId);
+        if(optionalProject.isPresent()){
+            List<Task> result = taskService.getUpcomingTasksByProject(optionalProject.get());
+            return ResponseEntity.ok(result);
+        }
+        return ResponseEntity.badRequest().build();
     }
     @PostMapping("/task/{id}")
     public ResponseEntity<Task> createTask(@PathVariable("id") Long teamId,@RequestBody Task task){

@@ -30,6 +30,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Optional<Project> findByName(String name) {
+        return  projectDao.findByName(name);
+    }
+
+    @Override
     public Optional<Project> findById(Long ID) {
         return projectDao.findById(ID);
     }

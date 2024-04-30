@@ -2,12 +2,15 @@ package com.tn.esprit.kanbanboard.serviceImpl;
 
 import com.tn.esprit.kanbanboard.dao.TeamDao;
 import com.tn.esprit.kanbanboard.dao.TaskDao;
+import com.tn.esprit.kanbanboard.entity.Project;
 import com.tn.esprit.kanbanboard.entity.Team;
 import com.tn.esprit.kanbanboard.entity.Task;
 import com.tn.esprit.kanbanboard.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -64,5 +67,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void delete(Task task) {
         taskDao.delete(task);
+    }
+
+    @Override
+    public List<Task> getUpcomingTasksByProject(Project project) {
+        Date currentDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(currentDate);
+        calendar.add(Calendar.DAY_OF_MONTH, 4);
+        Date soonDate = calendar.getTime();
+
+        // Call the repository method to fetch upcoming tasks
+        return taskDao.retrieveUpcomingTasks(project, soonDate);
     }
 }

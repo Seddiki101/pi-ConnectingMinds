@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -26,8 +27,8 @@ public class Task implements Serializable {
     private Status status;
     @Enumerated(EnumType.STRING)
     private Priority priority;
-    private LocalDateTime createdAt;
-    private LocalDateTime deadLine;
+    private Date createdAt;
+    private Date deadLine;
     private Long memberId;
     @ManyToOne
     @JoinColumn(name = "team_id")
