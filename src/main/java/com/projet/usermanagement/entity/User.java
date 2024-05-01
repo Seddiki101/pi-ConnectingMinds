@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @FullTextField
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email",unique = true)
     @FullTextField
     private String email;
 
