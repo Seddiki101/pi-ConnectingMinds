@@ -3,6 +3,7 @@ package com.projet.usermanagement.serviceImp;
 import com.projet.usermanagement.dao.UserRepository;
 import com.projet.usermanagement.dto.AuthenticationResponse;
 import com.projet.usermanagement.entity.User;
+import com.projet.usermanagement.entity.UserRole;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -29,6 +30,17 @@ public class UserServiceImp {
     {
         //maybe create a method in repo to get certain attributes
         return userRepository.findAll();
+    }
+
+
+    public List<User> getAllRegularUsers()
+    {
+        return userRepository.findByRole(UserRole.USER);
+    }
+
+    public List<User> getAllAdminUsers()
+    {
+        return userRepository.findByRole(UserRole.ADMIN  );
     }
 
     public User getUserById(Long id)
@@ -80,6 +92,13 @@ public class UserServiceImp {
     {
         userRepository.blockUser2(email);
     }
+
+    public void revokeUser(String email)
+    {
+        userRepository.revokeUser(email);
+    }
+
+    public void giveAcceess(String email){ userRepository.giveAccess(email);}
 
 
     public void updateUser(User user,RegistrationRequest request)

@@ -1,6 +1,7 @@
 package com.projet.usermanagement.dao;
 
 import com.projet.usermanagement.entity.User;
+import com.projet.usermanagement.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,8 +17,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional <User> findUserById(Long id) ;
     Optional<User> findByResetPasswordToken(String token);
 
-
     List<User> findByIdIn(List<Long> ids);
+
+    List<User> findByRole(UserRole role);
+
 
     @Query("SELECT u FROM User u JOIN u.tokens t WHERE t.token = :token")
     Optional<User> findUserByToken(@Param("token") String token);
@@ -42,6 +45,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "SET a.locked = TRUE WHERE a.email = ?1")
     void blockUser2(String email);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE User u SET u.role = 'USER' WHERE u.email = ?1")
+    void revokeUser(String email);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE User a " +
+            "SET a.role = 'ADMIN' WHERE a.email = ?1")
+    void giveAccess(String email);
 
 
 }

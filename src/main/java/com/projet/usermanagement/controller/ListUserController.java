@@ -1,5 +1,6 @@
 package com.projet.usermanagement.controller;
 
+import com.projet.usermanagement.dto.EmailRequest;
 import com.projet.usermanagement.dto.IdRequest;
 import com.projet.usermanagement.dto.SearchCriteria;
 import com.projet.usermanagement.entity.User;
@@ -23,7 +24,16 @@ public class ListUserController {
     @GetMapping
     public List<User> getAll()
     {
-        return userService.getAllUsers();
+        return userService.getAllRegularUsers();
+        //return userService.getAllUsers();
+    }
+
+
+    @RequestMapping("/admin_only/getAllAdmins")
+    @GetMapping
+    public List<User> getAllAdmins()
+    {
+        return userService.getAllAdminUsers();
     }
 
 /*
@@ -41,28 +51,48 @@ public class ListUserController {
 
     @RequestMapping("/admin_only/BlockUser")
     @PostMapping
-    public String blockUser2(@RequestBody String email)
+    public String blockUser2(@RequestBody EmailRequest email)
     {
-        userService.blockUser2( email );
+        userService.blockUser2( email.getEmail() );
         return "Request is being processed";
     }
 
 
+    @RequestMapping("/admin_only/RevokeUser")
+    @PostMapping
+    public String revokeUser(@RequestBody EmailRequest email)
+    {
+        userService.revokeUser( email.getEmail() );
+        return "Request is being processed";
+    }
+
+    @RequestMapping("/admin_only/giveAccess")
+    @PostMapping
+    public String giveAccess(@RequestBody EmailRequest email)
+    {
+        userService.giveAcceess( email.getEmail() );
+        return "Request is being processed";
+    }
+
 
     @PostMapping("/admin_only/searchUsers")
     public List<User> searchUsers(@RequestBody SearchCriteria criteria) {
-        System.out.println("search called "+criteria.getKeyword() );
-        return userSearchService.findUsersByKeyword(criteria.getKeyword());
+     //   System.out.println("search called "+criteria.getKeyword() );
+        return userSearchService.findUsersByKeyword1(criteria.getKeyword());
     }
 
 
-
-    /*
-    @GetMapping("/searchUsers")
-    public List<User> searchUsers(@RequestParam String keyword) {
-        return userSearchService.findUsersByKeyword(keyword);
+    @PostMapping("/admin_only/searchUsers1")
+    public List<User> searchUsers1(@RequestBody SearchCriteria criteria) {
+      //  System.out.println("search called "+criteria.getKeyword() );
+        return userSearchService.findUsersByKeyword1(criteria.getKeyword());
     }
-    */
+
+    @PostMapping("/admin_only/searchUser")
+    public List<User> searchUser(@RequestBody SearchCriteria criteria) {
+        return userSearchService.findUsersByKeyword2(criteria.getKeyword());
+    }
+
 
 
 }

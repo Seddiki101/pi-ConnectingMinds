@@ -76,7 +76,7 @@ public class JwtService {
 
         //this if you want to test role in front
         String role ="420" ;
-        if( user.getRole().name().equals(UserRole.ADMIN.toString() ) ) { role = "69" ; }
+        if( user.getRole().name().equals(UserRole.ADMIN.toString() ) ) { role = "69" ;  }
 
 
 
@@ -87,6 +87,7 @@ public class JwtService {
                 .expiration(new Date(System.currentTimeMillis() + 24*60*60*1000 ))
                 .claim("guise", role)
                 .claim("firstname", user.getFirstName())
+                .claim("lastname", user.getLastName())
 
                 .signWith(getSigninKey())
                 .compact();

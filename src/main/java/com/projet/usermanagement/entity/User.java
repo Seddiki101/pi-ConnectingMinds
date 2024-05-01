@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 //import javax.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,6 +44,7 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(value = EnumType.STRING)
+    @KeywordField
     private UserRole role ;
 
     @FullTextField
