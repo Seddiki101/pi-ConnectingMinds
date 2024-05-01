@@ -5,8 +5,10 @@ import com.esprit.resourcesmanagement.entities.Resource;
 import com.esprit.resourcesmanagement.services.ResourceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,5 +74,28 @@ public class ResourceServiceImpl implements ResourceService {
     public void deleteResource(Long id) {
         this.resourceDao.deleteById(id);
     }
+
+    @Override
+    public Resource getLastAddedResource() {
+        Optional<Resource> optionalResource = resourceDao.findLastAddedResource();
+        return optionalResource.orElse(null);
+    }
+
+    @Override
+    public List<Resource> findTop4ResourcesByLikes() {
+        List<Resource> topResources = new ArrayList<>();
+
+        // Récupérer les ressources triées par le nombre de likes de manière décroissante
+        List<Resource> resources = resourceDao.findAll(Sort.by(Sort.Direction.DESC, "likes"));
+
+        // Sélectionner les 4 premières ressources ou toutes les ressources si elles sont moins de 4
+        int count = Math.min(resources.size(), 4);
+        for (int i = 0; i < count; i++) {
+            topResources.add(resources.get(i));
+        }
+
+        return topResources;
+    }
+
 
 }

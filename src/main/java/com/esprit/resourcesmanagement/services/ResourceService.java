@@ -35,4 +35,7 @@ public interface ResourceService {
     Resource addResource(@RequestBody Resource resource);
 
     void deleteResource(Long id);
+    public Resource getLastAddedResource();
+    List<Resource> findTop4ResourcesByLikes();
+
 }

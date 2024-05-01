@@ -45,4 +45,11 @@ public class CategoryController {
         categoryService.deleteCategory(id);
     }
 
+    @GetMapping("/get-image/{categoryId}")
+    @ResponseBody
+    public byte[] getImageUrl(@PathVariable Long categoryId) {
+     return this.categoryService.findCategoryById(categoryId).getImage();
+
+    }
+
 }

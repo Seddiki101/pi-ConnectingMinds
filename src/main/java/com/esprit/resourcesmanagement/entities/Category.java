@@ -16,7 +16,10 @@ import java.io.Serializable;
 public class Category implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long categoryId;
     private String name;
     private String description;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] image;
 }
