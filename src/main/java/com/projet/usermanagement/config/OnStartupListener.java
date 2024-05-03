@@ -1,6 +1,7 @@
 package com.projet.usermanagement.config;
 
-import com.projet.usermanagement.serviceImp.UserSearchService;
+
+import com.projet.usermanagement.service.UserSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;

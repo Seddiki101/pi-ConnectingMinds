@@ -4,6 +4,7 @@ import com.projet.usermanagement.dao.UserRepository;
 import com.projet.usermanagement.dto.AuthenticationResponse;
 import com.projet.usermanagement.entity.User;
 import com.projet.usermanagement.entity.UserRole;
+import com.projet.usermanagement.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +19,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImp {
+public class UserServiceImp implements UserService {
 
     @Autowired
     private final UserRepository userRepository;

@@ -1,7 +1,7 @@
 package com.projet.usermanagement.security;
 
 
-import com.projet.usermanagement.serviceImp.JwtService;
+import com.projet.usermanagement.service.JwtService;
 import com.projet.usermanagement.serviceImp.UserDetailsServiceImp;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

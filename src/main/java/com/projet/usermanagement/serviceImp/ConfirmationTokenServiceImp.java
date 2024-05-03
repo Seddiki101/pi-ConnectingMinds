@@ -2,6 +2,7 @@ package com.projet.usermanagement.serviceImp;
 
 import com.projet.usermanagement.dao.ConfirmationTokenDao;
 import com.projet.usermanagement.security.ConfirmationToken;
+import com.projet.usermanagement.service.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class ConfirmationTokenService {
+public class ConfirmationTokenServiceImp implements ConfirmationTokenService {
 
     private final ConfirmationTokenDao confirmationTokenRepository;
 

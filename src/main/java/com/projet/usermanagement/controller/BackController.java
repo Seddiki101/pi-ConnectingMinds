@@ -1,7 +1,10 @@
 package com.projet.usermanagement.controller;
 
+import com.projet.usermanagement.dto.SearchCriteria;
 import com.projet.usermanagement.entity.User;
+import com.projet.usermanagement.service.UserSearchService;
 import com.projet.usermanagement.serviceImp.UserServiceImp;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,11 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/back/user")
+@RequestMapping("/api/v2/user/back")
 public class BackController {
 
     @Autowired
     private UserServiceImp userService;
+    @Autowired
+    private UserSearchService userSearchService ;
 
 
     @RequestMapping("/getUserData")
@@ -64,6 +69,27 @@ public class BackController {
     public ResponseEntity<List<User>> getUsersByIds(@RequestBody List<Long> ids) {
         List<User> users = userService.getUsersByIds(ids);
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/searchUsers1")
+    public List<User> searchUsers1(@RequestBody SearchCriteria criteria) {
+        return userSearchService.findUsersByKeyword(criteria.getKeyword());
+    }
+
+    @GetMapping("/testing")
+    public String testing(HttpServletRequest request){
+        System.out.println("Requested URL: " + request.getRequestURL().toString());
+        return "testing";
+    }
+
+    @GetMapping("/demo")
+    public ResponseEntity<String> demo() {
+        return ResponseEntity.ok("Hello from secured url");
+    }
+
+    @GetMapping("/admin_only")
+    public ResponseEntity<String> adminOnly() {
+        return ResponseEntity.ok("Hello from admin only url");
     }
 
 

@@ -2,6 +2,7 @@ package com.projet.usermanagement.serviceImp;
 
 import com.projet.usermanagement.entity.User;
 import com.projet.usermanagement.entity.UserRole;
+import com.projet.usermanagement.service.UserSearchService;
 import jakarta.persistence.EntityManager;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
@@ -14,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 @Service
-public class UserSearchService {
+public class UserSearchServiceImp implements UserSearchService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserSearchService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserSearchServiceImp.class);
     private static final String INDEXATION_ERROR = "Indexation process was interrupted";
     private static final String INDEXATION_OK = "Indexation completed successfully";
 
@@ -36,7 +37,7 @@ public class UserSearchService {
     }
 
     @Transactional
-    public List<User> findUsersByKeyword(String keyword) {
+    public List<User> findAllUsersByKeyword(String keyword) {
         SearchSession searchSession = Search.session(entityManager);
 
         List<User> users = searchSession.search(User.class)
@@ -52,7 +53,7 @@ public class UserSearchService {
 
 
     @Transactional
-    public List<User> findUsersByKeyword1(String keyword)  {
+    public List<User> findUsersByKeyword(String keyword)  {
         SearchSession searchSession = Search.session(entityManager);
 
         List<User> users = searchSession.search(User.class)
@@ -73,7 +74,7 @@ public class UserSearchService {
 
 
     @Transactional
-    public List<User> findUsersByKeyword2(String keyword)  {
+    public List<User> findAdminsByKeyword(String keyword)  {
         SearchSession searchSession = Search.session(entityManager);
 
         List<User> users = searchSession.search(User.class)

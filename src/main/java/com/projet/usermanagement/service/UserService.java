@@ -1,5 +1,6 @@
 package com.projet.usermanagement.service;
 
+import com.projet.usermanagement.dto.RegistrationRequest;
 import com.projet.usermanagement.entity.User;
 
 import java.util.List;
@@ -8,7 +9,7 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User getUserByEmail(String email);
+    User getUserbymail(String email);
 
     User getByResetPasswordToken(String token);
 
@@ -19,5 +20,6 @@ public interface UserService {
     void updatePassword(User user, String newPassword);
 
     void blockUser(Long id);
+     void updateUser(User user, RegistrationRequest request);
 
 }

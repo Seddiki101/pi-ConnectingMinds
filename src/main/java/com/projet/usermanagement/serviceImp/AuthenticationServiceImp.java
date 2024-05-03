@@ -11,38 +11,35 @@ import com.projet.usermanagement.entity.User;
 import com.projet.usermanagement.entity.UserRole;
 import com.projet.usermanagement.security.Token;
 import com.projet.usermanagement.security.ConfirmationToken;
-import com.projet.usermanagement.serviceImp.ConfirmationTokenService;
+import com.projet.usermanagement.service.AuthenticationService;
+import com.projet.usermanagement.service.ConfirmationTokenService;
+import com.projet.usermanagement.service.JwtService;
 import jakarta.annotation.Resource;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 
-public class AuthenticationService {
+public class AuthenticationServiceImp implements AuthenticationService {
 @Autowired
     private  UserRepository repository;
     @Autowired
     private  PasswordEncoder passwordEncoder;
     @Autowired
-    private  JwtService jwtService;
+    private JwtService jwtService;
     @Resource
-    private  ConfirmationTokenService confirmationTokenService  ;
+    private ConfirmationTokenService confirmationTokenService  ;
     @Autowired
     private  TokenRepository tokenRepository;
     @Autowired
@@ -53,6 +50,8 @@ public class AuthenticationService {
 
     @Autowired
     private UserValidator userValidator;
+
+
 //old mail verificaiton , doesn t use validator
 /*
     private static final String EMAIL_PATTERN =
