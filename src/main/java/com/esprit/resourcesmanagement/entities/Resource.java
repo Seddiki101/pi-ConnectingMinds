@@ -37,10 +37,13 @@ public class Resource implements Serializable {
     private int likes=0;
     private int dislikes=0;
     private int downloads=0;
+    private int views=0;
+    private int nbreReviews=0;
     private Long userId;
     private String dateCreation ;
-    @OneToMany(mappedBy = "resource", cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
+    //@OneToMany(mappedBy = "resource", cascade = CascadeType.ALL)
+    //private List<Review> reviews = new ArrayList<>();
+
 
     @Override
     public String toString() {
@@ -56,9 +59,9 @@ public class Resource implements Serializable {
                 ", likes=" + likes +
                 ", dislikes=" + dislikes +
                 ", downloads=" + downloads +
+                ", views=" + views +
                 ", userId=" + userId +
                 ", dateCreation='" + dateCreation + '\'' +
-                ", reviews=" + reviews +
                 '}';
     }
 }

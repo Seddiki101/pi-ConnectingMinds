@@ -39,6 +39,11 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
+    public List<Resource> getAllResourcesByUserId(Long id) {
+        return this.resourceDao.findByUserId(id);
+    }
+
+    @Override
     public Resource findResourceById(Long id) {
         Resource resource = null;
         if (id != null) {
@@ -55,14 +60,17 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Resource updateResource(Resource resource) {
-        Resource updatedResource = null;
+    public Resource updateResource(Resource resource,Long id) {
+        //Resource updatedResource = null;
+        Resource ancienneResource =this.findResourceById(id);
         if (resource != null) {
-            updatedResource = this.resourceDao.save(resource);
+
+            ancienneResource.setDescription(resource.getDescription());
+            this.resourceDao.save(ancienneResource);
         } else {
             LOG.error(ERROR_UPDATE);
         }
-        return updatedResource;
+        return ancienneResource;
     }
 
     @Override
@@ -96,6 +104,39 @@ public class ResourceServiceImpl implements ResourceService {
 
         return topResources;
     }
+
+    @Override
+    public void views(Long id) {
+       Resource resource =this.findResourceById(id);
+       resource.setViews(resource.getViews()+1);
+       this.resourceDao.save(resource);
+    }
+
+    @Override
+    public void ReviewsUp(Long id) {
+        Resource resource =this.findResourceById(id);
+        resource.setNbreReviews(resource.getNbreReviews()+1);
+        this.resourceDao.save(resource);
+
+    }
+
+    @Override
+    public void ReviewsDown(Long id) {
+        Resource resource =this.findResourceById(id);
+        resource.setNbreReviews(resource.getNbreReviews()-1);
+        this.resourceDao.save(resource);
+
+    }
+
+    @Override
+    public void like(Long id) {
+        Resource resource =this.findResourceById(id);
+        resource.setLikes(resource.getLikes()+1);
+        this.resourceDao.save(resource);
+
+    }
+
+
 
 
 }

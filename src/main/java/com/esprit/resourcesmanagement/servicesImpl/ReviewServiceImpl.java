@@ -2,6 +2,7 @@ package com.esprit.resourcesmanagement.servicesImpl;
 
 import com.esprit.resourcesmanagement.daos.ReviewDao;
 import com.esprit.resourcesmanagement.entities.Review;
+import com.esprit.resourcesmanagement.services.ResourceService;
 import com.esprit.resourcesmanagement.services.ReviewService;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +31,18 @@ public class ReviewServiceImpl implements ReviewService {
     @Resource
     private ReviewDao reviewDao;
 
+    @Resource
+    private ResourceService resourceService ;
+
 
     @Override
     public List<Review> getAllReviews() {
         return this.reviewDao.findAll();
+    }
+
+    @Override
+    public List<Review> getAllReviewsByResource(Long resourceId) {
+        return this.reviewDao.findByResource_ResourceId(resourceId);
     }
 
     @Override
@@ -53,18 +62,22 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review updateReview(Review review) {
-        Review updatedReview = null;
+    public Review updateReview(Review review,Long id) {
+        Review ancienneReview =this.findReviewById(id);
         if (review != null) {
-            updatedReview = this.reviewDao.save(review);
+
+            ancienneReview.setContent(review.getContent());
+            this.reviewDao.save(ancienneReview);
         } else {
             LOG.error(ERROR_UPDATE);
         }
-        return updatedReview;
+        return ancienneReview;
     }
 
     @Override
-    public Review addReview(Review review) {
+    public Review addReview(Review review ) {
+       // Resource resource = (Resource) this.resourceService.findResourceById(resourceId);
+       // review.setResource((com.esprit.resourcesmanagement.entities.Resource) resource);
         return this.reviewDao.save(review);
     }
 

@@ -1,12 +1,19 @@
 package com.esprit.resourcesmanagement.controllers;
 
 import com.esprit.resourcesmanagement.entities.Resource;
+//import com.esprit.resourcesmanagement.entities.Subscribe;
+import com.esprit.resourcesmanagement.services.CategoryService;
 import com.esprit.resourcesmanagement.services.ResourceService;
-import jakarta.persistence.PostPersist;
+//import com.esprit.resourcesmanagement.services.SubscribeService;
 import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.mail.SimpleMailMessage;
+//import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+//import org.springframework.mail.SimpleMailMessage;
+//import javax.mail.internet.MimeMessage;
+
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,11 +30,23 @@ public class ResourceController {
 
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    private CategoryService categoryService;
+//    @Autowired
+//    private SubscribeService subscribeService;
+//    @Autowired
+//    private JavaMailSender javaMailSender;
 
     @GetMapping("/all-resources")
     @ResponseBody
     public List<Resource> getAll() {
         return this.resourceService.getAllResources();
+    }
+
+    @GetMapping("/all-resources/{id}")
+    @ResponseBody
+    public List<Resource> getAllByUser(@PathVariable Long id) {
+        return this.resourceService.getAllResourcesByUserId(id);
     }
     @GetMapping("/all-popular-resources")
     @ResponseBody
@@ -38,6 +57,10 @@ public class ResourceController {
     @GetMapping("/getResourceById/{id}")
     @ResponseBody
     public Resource getResourceById(@PathVariable Long id) {
+
+        this.resourceService.views(id);
+
+
         return id != null ? this.resourceService.findResourceById(id) : null;
     }
     @GetMapping("/getImageResource/{id}")
@@ -46,10 +69,27 @@ public class ResourceController {
         return id != null ? this.resourceService.findResourceById(id).getContent() : null;
     }
 
-    @PutMapping("/updateResource")
+    @PutMapping("/updateResource/{id}")
     @ResponseBody
-    public Resource updateResource(@RequestBody Resource resource) {
-        return resource != null ? this.resourceService.updateResource(resource) : null;
+    public Resource updateResource(@RequestBody Resource resource,@PathVariable Long id) {
+//        Resource resUp =this.resourceService.findResourceById(id);
+//
+//        List<Subscribe> subscribes =this.subscribeService.findByResource(id);
+//        for (Subscribe subscribe :  subscribes){
+//
+//            SimpleMailMessage message = new SimpleMailMessage();
+//            message.setTo(subscribe.getEmail());
+//            message.setSubject("Updated  Resource !!");
+//            message.setText("Your favorite Resource" + resUp.getName() + " has been updated by the owner, check the update !!" );
+//            this.javaMailSender.send(message);
+//
+//
+//
+//        }
+
+
+     return resource != null ? this.resourceService.updateResource(resource,id) : null;
+
     }
 
     @PostMapping("/addResource")
@@ -98,6 +138,7 @@ public class ResourceController {
             lastresource.setContent(beforeLastResource.getContent());
             lastresource.setContentType(beforeLastResource.getContentType());
             lastresource.setUserId(beforeLastResource.getUserId());
+            lastresource.setCategory(this.categoryService.findCategoryById(1L));
             this.resourceService.deleteResource(beforeLastId);
 
         }
@@ -113,6 +154,7 @@ public class ResourceController {
             lastresource.setName(beforeLastResource.getName());
             lastresource.setDescription(beforeLastResource.getDescription());
             lastresource.setUserId(beforeLastResource.getUserId());
+            lastresource.setCategory(this.categoryService.findCategoryById(1L));
             this.resourceService.deleteResource(beforeLastId);
 
         }
@@ -130,5 +172,14 @@ public class ResourceController {
     public void deleteResource(@PathVariable Long id) {
         resourceService.deleteResource(id);
     }
+
+    @GetMapping("/like/{id}")
+    @ResponseBody
+    public void likeResource(@PathVariable Long id) {
+
+        this.resourceService.like(id);
+
+    }
+
 
 }

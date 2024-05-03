@@ -1,6 +1,7 @@
 package com.esprit.resourcesmanagement.services;
 
 import com.esprit.resourcesmanagement.entities.Review;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public interface ReviewService {
      * @return list of Review.
      */
     List<Review> getAllReviews();
+    List<Review> getAllReviewsByResource(Long resourceId);
 
     /**
      * Fetch Review by a given id.
@@ -22,6 +24,7 @@ public interface ReviewService {
      * @param id
      * @return Review
      */
+
     Review findReviewById(Long id);
 
     /**
@@ -30,7 +33,7 @@ public interface ReviewService {
      * @param review
      * @return updated review object.
      */
-    Review updateReview(Review review);
+    Review updateReview(Review review,Long id);
 
     Review addReview(@RequestBody Review review);
 

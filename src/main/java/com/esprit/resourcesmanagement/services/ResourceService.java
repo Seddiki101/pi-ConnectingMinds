@@ -15,6 +15,7 @@ public interface ResourceService {
      * @return list of Resource.
      */
     List<Resource> getAllResources();
+    List<Resource> getAllResourcesByUserId(Long id);
 
     /**
      * Fetch Resource by a given id.
@@ -30,12 +31,20 @@ public interface ResourceService {
      * @param resource
      * @return updated resource object.
      */
-    Resource updateResource(Resource resource);
+    Resource updateResource(Resource resource,Long id);
 
     Resource addResource(@RequestBody Resource resource);
 
     void deleteResource(Long id);
-    public Resource getLastAddedResource();
+    Resource getLastAddedResource();
     List<Resource> findTop4ResourcesByLikes();
+
+    void views (Long id);
+    void ReviewsUp (Long id);
+    void ReviewsDown (Long id);
+    void like (Long id);
+
+
+
 
 }
