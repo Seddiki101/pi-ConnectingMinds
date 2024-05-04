@@ -36,15 +36,19 @@ public class ProjectController {
         List<Project> projects = projectService.findByOwnerId(id);
         return ResponseEntity.ok(projects);
     }
+    @GetMapping("project/user/{userId}")
+    public List<Project> getProjectsByUserId(@PathVariable("userId") Long userId) {
+        return projectService.getProjectsByUserId(userId);
+    }
     @GetMapping("/project/unique-names/{name}")
     public ResponseEntity<Project> getProjectByName(@PathVariable("name") String name){
         Optional<Project> project = projectService.findByName(name);
-        return project.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return project.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
     @GetMapping("/project/{id}")
     public ResponseEntity<Project> getProjectById(@PathVariable("id") Long id){
         Optional<Project> project = projectService.findById(id);
-        return project.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return project.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
     @PostMapping(value = "/project",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Project> createProject(@RequestPart("project") Project project,
@@ -91,7 +95,7 @@ public class ProjectController {
             projectService.delete(toDelete.get());
             return ResponseEntity.ok("Project deleted successfully.");
         }else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 

@@ -27,7 +27,7 @@ public class EventController {
     @GetMapping("/event/{id}")
     public ResponseEntity<Event> getEventById(@PathVariable("id") Long id){
         Optional<Event> optionalEvent= eventService.findById(id);
-        return optionalEvent.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return optionalEvent.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
     @PostMapping("/event/{id}")
     public ResponseEntity<Event> createEvent(@PathVariable("id") Long teamId,@RequestBody Event event){
@@ -46,7 +46,7 @@ public class EventController {
             eventService.delete(optionalEvent.get());
             return ResponseEntity.ok("Event deleted successfully.");
         }else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 }

@@ -27,7 +27,7 @@ public class NotificationController {
     @GetMapping("/notification/{id}")
     public ResponseEntity<Notification> getNotification(@PathVariable("id") Long id){
         Optional<Notification> optionalNotification = notificationService.findById(id);
-        return optionalNotification.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return optionalNotification.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
     @PostMapping("/notification/{id}")
     public ResponseEntity<Notification> createNotification(@PathVariable("id") Long teamId,@RequestBody Notification notification){
@@ -46,7 +46,7 @@ public class NotificationController {
             notificationService.delete(optionalNotification.get());
             return ResponseEntity.ok("Notification deleted successfully.");
         }else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 }

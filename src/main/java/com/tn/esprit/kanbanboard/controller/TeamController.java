@@ -32,12 +32,12 @@ public class TeamController {
     @GetMapping("/team/{id}")
     public ResponseEntity<Team> getTeamById(@PathVariable("id") Long id){
         Optional<Team> team = teamService.findById(id);
-        return team.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return team.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
     @GetMapping("/team/unique-names/{name}")
     public ResponseEntity<Team> getTeamByName(@PathVariable("name") String name){
         Optional<Team> team = teamService.findByName(name);
-        return team.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return team.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
     @PostMapping(value="/team/{id}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Team> createTeam(@PathVariable("id") Long projectId, @RequestPart("team") Team team, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
@@ -76,7 +76,7 @@ public class TeamController {
             teamService.delete(optionalteam.get());
             return ResponseEntity.ok("team deleted successfully.");
         }else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 }

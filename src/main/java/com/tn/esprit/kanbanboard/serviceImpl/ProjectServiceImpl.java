@@ -71,4 +71,9 @@ public class ProjectServiceImpl implements ProjectService {
         }
         projectDao.delete(project);
     }
+
+    @Override
+    public List<Project> getProjectsByUserId(Long userId) {
+        return projectDao.findProjectsByUserId(userId);
+    }
 }

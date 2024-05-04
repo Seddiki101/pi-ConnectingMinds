@@ -30,7 +30,7 @@ public class TaskController {
     @GetMapping("/task/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id){
         Optional<Task> optionalTask = taskService.findById(id);
-        return optionalTask.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return optionalTask.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
     @GetMapping("/task/project/{id}")
     public ResponseEntity<List<Task>> getUpcomingTasksByProjectId(@PathVariable("id") Long projectId){
@@ -58,7 +58,7 @@ public class TaskController {
             taskService.delete(optionalTask.get());
             return ResponseEntity.ok("Task deleted Successfully.");
         }else{
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 }

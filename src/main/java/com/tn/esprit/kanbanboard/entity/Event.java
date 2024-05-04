@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Data
@@ -20,8 +21,9 @@ public class Event implements Serializable {
     private Long eventId;
     private String name;
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private Date startDate;
+    private Date endDate;
+
     @ManyToOne
     @JoinColumn(name = "team_id")
     @JsonIgnore

@@ -38,8 +38,6 @@ public class EventServiceImpl implements EventService {
             Team team = optionalTeam.get();
             event.setTeam(team);
             Event result = eventDao.save(event);
-            team.getEvents().add(event);
-            teamDao.save(team);
             return result;
         }
         System.out.println("Error : Team doesn't exist.");
@@ -55,15 +53,8 @@ public class EventServiceImpl implements EventService {
             updatedEvent.setDescription(event.getDescription());
             updatedEvent.setStartDate(event.getStartDate());
             updatedEvent.setEndDate(event.getEndDate());
-            Optional<Team> optionalTeam = teamDao.findById(updatedEvent.getTeam().getTeamId());
-            if(optionalTeam.isPresent()){
-                Event result = eventDao.save(updatedEvent);
-                Team team = optionalTeam.get();
-                team.getEvents().remove(optionalEvent.get());
-                team.getEvents().add(updatedEvent);
-                teamDao.save(team);
-                return result;
-            }
+             Event result = eventDao.save(updatedEvent);
+             return result;
          }
          System.out.println("Error : The Event doesn't exist to update.");
          return null;
@@ -71,12 +62,6 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void delete(Event event) {
-        Optional<Team> optionalTeam = teamDao.findById(event.getTeam().getTeamId());
-        if(optionalTeam.isPresent()){
-            Team team = optionalTeam.get();
-            team.getEvents().remove(event);
-            teamDao.save(team);
-        }
         eventDao.delete(event);
     }
 }
