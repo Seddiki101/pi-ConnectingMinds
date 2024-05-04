@@ -1,0 +1,73 @@
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+# Spring application settings
+spring:
+
+  # Data source settings
+  datasource:
+    url: jdbc:mysql://localhost:3306/testuser9?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: "" # Password is empty
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # JPA settings
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        search: # Hibernate Search settings
+          schema_management:
+            strategy: create-or-validate
+          backend:
+            type: lucene
+            directory:
+              type: local-filesystem
+              root: ./lucene/indexes
+
+  # Configuration server settings
+
+
+  # Mail settings
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+  # JWT settings
+#  security:
+#    jwt:
+#      secret-key: 6473d03d85419716909633ef9efc1ecb37faa81e055c74522a95b2b12ee41047
+#      expiration: 86400000
+#      refresh-token:
+#        expiration: 604800000
+
+# Eureka settings
+
+
+# Server settings
+server:
+  servlet:
+    context-path: /api/v2/user
+  port: 8082 # Application server port
+application:
+  config:
+    chat-url: http://localhost:8222/api/v1/chats

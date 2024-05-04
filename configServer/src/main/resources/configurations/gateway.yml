@@ -1,0 +1,49 @@
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false  # Fetch registry from Eureka
+server:
+  port: 8222
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:4200"
+            allowedMethods:
+              - PATCH
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"  # Allow all headers
+            allowCredentials: true
+            maxAge: 3600
+      routes:
+        - id: user
+          uri: lb://user  # Use load balancer prefix (lb://) followed by the Eureka service ID
+          predicates:
+            - Path=/api/v2/user/**
+        - id: chat
+          uri: lb://chat  # Use load balancer prefix (lb://) followed by the Eureka service ID
+          predicates:
+            - Path=/api/v1/**
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  tracing:
+    sampling:
+      probability: 1.0
+logging:
+  level:
+    root: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
