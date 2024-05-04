@@ -113,9 +113,9 @@ public class ResourceController {
     @PostMapping("/addResource2")
     @ResponseBody
     public Resource addResource2(@RequestBody Resource resource,@RequestHeader("Authorization") String token ) throws IOException, InterruptedException {
-        Long userId = getUserIdFromUserService(token);
-
-        if(userId != null ) {  resource.setUserId(userId);}
+//        Long userId = getUserIdFromUserService(token);
+//
+//        if(userId != null ) {  resource.setUserId(userId);}
 
 
         resourceService.addResource(resource);
@@ -195,20 +195,20 @@ public class ResourceController {
 
     /////Récupération du user///////////////////
 
-    public Long getUserIdFromUserService(String authToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", authToken);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<Long> response = restTemplate().exchange(
-                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
-
-        return response.getBody();
-    }
-
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
+//    public Long getUserIdFromUserService(String authToken) {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.set("Authorization", authToken);
+//        HttpEntity<String> entity = new HttpEntity<>(headers);
+//
+//        ResponseEntity<Long> response = restTemplate().exchange(
+//                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
+//
+//        return response.getBody();
+//    }
+//
+//    public RestTemplate restTemplate() {
+//        return new RestTemplate();
+//    }
 
 
 
