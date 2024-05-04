@@ -8,8 +8,13 @@ import com.esprit.resourcesmanagement.services.ResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.mail.SimpleMailMessage;
 //import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 //import org.springframework.mail.SimpleMailMessage;
 //import javax.mail.internet.MimeMessage;
@@ -107,7 +112,11 @@ public class ResourceController {
     }
     @PostMapping("/addResource2")
     @ResponseBody
-    public Resource addResource2(@RequestBody Resource resource) throws IOException, InterruptedException {
+    public Resource addResource2(@RequestBody Resource resource,@RequestHeader("Authorization") String token ) throws IOException, InterruptedException {
+        Long userId = getUserIdFromUserService(token);
+
+        if(userId != null ) {  resource.setUserId(userId);}
+
 
         resourceService.addResource(resource);
         sleep(0,1);
@@ -180,6 +189,31 @@ public class ResourceController {
         this.resourceService.like(id);
 
     }
+
+
+
+
+    /////Récupération du user///////////////////
+
+    public Long getUserIdFromUserService(String authToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Long> response = restTemplate().exchange(
+                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
+
+        return response.getBody();
+    }
+
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+
+
+
+    //////////////////amira///////////
 
 
 }

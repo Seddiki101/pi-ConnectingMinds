@@ -4,8 +4,13 @@ import com.esprit.resourcesmanagement.entities.Review;
 import com.esprit.resourcesmanagement.services.ResourceService;
 import com.esprit.resourcesmanagement.services.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -45,7 +50,9 @@ public class ReviewController {
 
     @PostMapping("/addReview")
     @ResponseBody
-    public Review addReview(@RequestBody Review review) {
+    public Review addReview(@RequestBody Review review,@RequestHeader("Authorization") String token) {
+        Long userId = getUserIdFromUserService(token);
+        if(userId != null ) {  review.setUserId(userId);}
         this.resourceService.ReviewsUp(review.getResource().getResourceId());
         return reviewService.addReview(review);
     }
@@ -56,5 +63,21 @@ public class ReviewController {
         this.resourceService.ReviewsDown(review.getResource().getResourceId());
         reviewService.deleteReview(id);
     }
+    public Long getUserIdFromUserService(String authToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Long> response = restTemplate().exchange(
+                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
+
+        return response.getBody();
+    }
+
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
+
+
 
 }

@@ -19,7 +19,7 @@ public class Review implements Serializable {
 
     private Long userId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "resource_id")
     private Resource resource;
 }
