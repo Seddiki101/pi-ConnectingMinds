@@ -4,6 +4,7 @@ import com.tn.esprit.kanbanboard.entity.Conversation;
 import com.tn.esprit.kanbanboard.entity.Message;
 import com.tn.esprit.kanbanboard.entity.UserMessage;
 import com.tn.esprit.kanbanboard.service.ConversationService;
+import com.tn.esprit.kanbanboard.service.ImageGenerationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,12 @@ import java.util.*;
 public class AiAssistantBotController {
     private final ConversationService conversationService;
     private final AzureOpenAiChatClient chatClient;
+    private final ImageGenerationService imageGenerationService;
     @Autowired
-    public AiAssistantBotController(ConversationService conversationService, AzureOpenAiChatClient chatClient) {
+    public AiAssistantBotController(ConversationService conversationService, AzureOpenAiChatClient chatClient,ImageGenerationService imageGenerationService) {
         this.conversationService = conversationService;
         this.chatClient = chatClient;
+        this.imageGenerationService = imageGenerationService;
     }
     @GetMapping("/conversation")
     public ResponseEntity<List<Conversation>> getAllConversations() {
@@ -28,7 +31,7 @@ public class AiAssistantBotController {
     }
     @GetMapping("/conversation/user/{id}")
     public ResponseEntity<List<Conversation>> getAllConversationsByUserId(@PathVariable("id") Long userId) {
-        List<Conversation> list= conversationService.findAll();
+        List<Conversation> list= conversationService.findAllByUserId(userId);
         return ResponseEntity.ok(list);
     }
     @GetMapping("/conversation/{id}")
@@ -36,14 +39,18 @@ public class AiAssistantBotController {
         Optional<Conversation> optionalConversation= conversationService.findById(id);
         return optionalConversation.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
-
+    @GetMapping("/ai/generate/image")
+    public ResponseEntity<String> generateImage(@RequestBody UserMessage userMessage) throws InterruptedException {
+        String url = imageGenerationService.generateImage(userMessage.getMessage());
+        return ResponseEntity.ok(url);
+    }
     @PostMapping("/conversation")
     public ResponseEntity<Conversation> Conversation(
             @RequestParam(required = false) Long conversationId // Optional parameter for existing conversation ID
-           , @RequestParam(required = false) Long userId, @RequestBody UserMessage prompt
+           , @RequestParam(required = false) Long userId, @RequestBody UserMessage userMessage
             ) {
         Conversation conversation;
-        String message = prompt.getMessage();
+        String message = userMessage.getMessage();
         if (conversationId != null) {
             // Fetch the existing conversation
             Optional<Conversation> optionalConversation = conversationService.findById(conversationId);
@@ -56,22 +63,21 @@ public class AiAssistantBotController {
             // Create a new conversation
             conversation = new Conversation();
             conversation.setUserId(userId);
-            conversation.setTimestamp(new Date());
         }
-
+        conversation.setTimestamp(new Date());
         // Add system instruction message to the beginning of conversation
         if (conversation.getMessages().isEmpty()) {
             Message systemMessage = new Message();
             systemMessage.setRole("system");
-            systemMessage.setContent("You are a helpful elite assistant, you give accurate answers. Based on the chat history, please answer the final user’s content.");
+            systemMessage.setContent("You are a helpful assistant, you give accurate answers in Markdown text format. Based on the chat history, please answer the final user’s content.");
             conversation.getMessages().add(systemMessage);
         }
 
         // Add the user's message to the conversation
-        Message userMessage = new Message();
-        userMessage.setRole("user");
-        userMessage.setContent(message);
-        conversation.getMessages().add(userMessage);
+        Message messageOfUser = new Message();
+        messageOfUser.setRole("user");
+        messageOfUser.setContent(message);
+        conversation.getMessages().add(messageOfUser);
 
         // Call the Azure Open AI model with entire conversation history
         String modelResponse = callAzureOpenAI(conversation.getMessages());
@@ -108,4 +114,5 @@ public class AiAssistantBotController {
         // Call the Azure Open AI model
         return chatClient.call(conversationText);
     }
+
 }

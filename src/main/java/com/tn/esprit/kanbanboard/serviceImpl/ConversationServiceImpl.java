@@ -23,7 +23,8 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public List<Conversation> findAllByUserId(Long userId) {
-        return conversationDao.findByUserId(userId);
+        List<Conversation> list = conversationDao.findByUserIdOrderByTimestampDesc(userId);
+        return list;
     }
 
     @Override
