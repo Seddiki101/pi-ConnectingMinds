@@ -25,6 +25,12 @@ public class Question implements Serializable {
     private String FirstName;
     @JsonProperty("lastName")
     private String LastName ;
+    @JsonProperty("idUser")
+    private Long IdUser;
+    @Column(name = "nombre_likes")
+    @JsonProperty("like")
+    private Integer like;
+
     @NotBlank(message = "Le contenu ne peut pas être vide")
     @JsonProperty("contenu")
     private String Contenu;
@@ -35,15 +41,31 @@ public class Question implements Serializable {
     @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime updatedAt;
 
+
     @Column(name = "image", columnDefinition = "LONGBLOB")
     @Lob
     private byte[] image;
-
+    public Question() {
+        this.like = 0; // Initialise le champ "like" à 0 lors de la création d'une nouvelle instance
+    }
 
 
 
     @OneToMany(mappedBy = "question" , cascade = CascadeType.ALL)
     @JsonBackReference
     private List<Reponse> reponses ;
+
+
+    public void addLike() {
+        this.like++;
+    }
+
+    public void removeLike() {
+        if (this.like > 0) {
+            this.like--;
+        }
+    }
+
+
 
 }

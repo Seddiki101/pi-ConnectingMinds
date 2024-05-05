@@ -3,10 +3,10 @@ package com.maryem.forum.controllers;
 import com.maryem.forum.entities.Question;
 import com.maryem.forum.services.QuestionService;
 import jakarta.annotation.Resource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -18,6 +18,44 @@ import static net.sf.jsqlparser.util.validation.metadata.NamedObject.index;
 @RestController
 @CrossOrigin
 public class QuestionController {
+    @PostMapping("/{questionId}/like")
+    public ResponseEntity<String> addLikeToQuestion(@PathVariable int questionId) {
+        try {
+            questionService.addLikeToQuestion(questionId);
+            return ResponseEntity.ok("Like ajouté avec succès à la question avec l'ID : " + questionId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Une erreur s'est produite lors de l'ajout du like à la question avec l'ID : " + questionId);
+        }
+    }
+
+    // Endpoint pour supprimer un like d'une question spécifique
+    @DeleteMapping("/{questionId}/like")
+    public ResponseEntity<String> removeLikeFromQuestion(@PathVariable int questionId) {
+        try {
+            questionService.removeLikeFromQuestion(questionId);
+            return ResponseEntity.ok("Like supprimé avec succès de la question avec l'ID : " + questionId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Une erreur s'est produite lors de la suppression du like de la question avec l'ID : " + questionId);
+        }
+    }
+
+
+    public Long getUserIdFromUserService(String authToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Long> response = restTemplate().exchange(
+                "http://localhost:8082/getUserSpot", HttpMethod.GET, entity, Long.class);
+
+        return response.getBody();
+    }
+
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
     @Resource
     QuestionService questionService;
 

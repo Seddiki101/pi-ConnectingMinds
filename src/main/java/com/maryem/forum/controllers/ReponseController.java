@@ -4,8 +4,13 @@ import com.maryem.forum.entities.Question;
 import com.maryem.forum.entities.Reponse;
 import com.maryem.forum.services.ReponseService;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -14,8 +19,24 @@ import java.util.Optional;
 
 @RestController
 public class ReponseController {
+
     @Resource
     ReponseService reponseService;
+
+
+    public Long getUserIdFromUserService(String authToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<Long> response = restTemplate().exchange(
+                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
+
+        return response.getBody();
+    }
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
     @GetMapping("/searchR")
     public List<Reponse> searchPosts(@RequestParam("contenu") String contenu) {
         return reponseService.searchComments(contenu);
@@ -45,9 +66,15 @@ public class ReponseController {
     public Reponse ajouterReponse(
             @RequestParam String contenu,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-            @PathVariable int idQuestion
+            @PathVariable int idQuestion ,
+            @RequestHeader("Authorization") String token
+
+
     ) {
-        return reponseService.ajouterReponse(contenu, idQuestion, imageFile);
+        Long userId = getUserIdFromUserService(token);
+
+
+        return reponseService.ajouterReponse(contenu, idQuestion, imageFile , userId );
     }
 
 
@@ -55,8 +82,9 @@ public class ReponseController {
 
     @PutMapping("/updateReponse")
     @ResponseBody
-    public Reponse updateReponse(@RequestBody Reponse reponse) {
-        return reponse != null ? this.reponseService.updateAnswer(reponse) : null;
+    public Reponse updateReponse(@RequestBody Reponse reponse, @RequestHeader("Authorization") String token) {
+        Long userId = getUserIdFromUserService(token);
+        return reponse != null ? this.reponseService.updateAnswer(reponse, userId ) : null;
     }
     @DeleteMapping("DeleteAnswer/{id}")
     @ResponseBody

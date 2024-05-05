@@ -69,7 +69,7 @@ public class ReponseServiceImpl implements ReponseService {
 
     @Override
     @Transactional
-    public Reponse ajouterReponse(String contenu, int idQuestion, MultipartFile imageFile) {
+    public Reponse ajouterReponse(String contenu, int idQuestion, MultipartFile imageFile ,Long userID) {
         // Vérifier si le contenu de la réponse est null ou vide
         if (StringUtils.isEmpty(contenu)) {
             LOG.error("Posted answer content is NULL or empty");
@@ -108,9 +108,13 @@ public class ReponseServiceImpl implements ReponseService {
         // Mettre à jour la date de création si elle est nulle
         newReponse.setCreatedAt(LocalDateTime.now());
 
+        if(userID != null ) {
+            newReponse.setIdUser(userID);
+        }
 
 
-        String to = "zouaouimaryem327@gmail.com";
+
+            String to = "zouaouimaryem327@gmail.com";
         String subject = "New answer Added";
         String body = "A new answer has been added with details:";
 
@@ -128,7 +132,7 @@ public class ReponseServiceImpl implements ReponseService {
 
 
     @Override
-    public Reponse updateAnswer(Reponse reponse) {
+    public Reponse updateAnswer(Reponse reponse  ,Long userID) {
         // Vérifier si la question n'est pas null
         if (reponse != null) {
             // Récupérer la question existante de la base de données
@@ -145,6 +149,9 @@ public class ReponseServiceImpl implements ReponseService {
                 }
                 // Mettre à jour updatedAt
                 existingAnswer.setUpdatedAt(LocalDateTime.now());
+                if(userID != null ) {
+                    existingAnswer.setIdUser(userID);
+                }
                 // Enregistrer la question mise à jour dans la base de données
                 return reponseRepository.save(existingAnswer);
             } else {

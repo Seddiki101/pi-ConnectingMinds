@@ -8,9 +8,12 @@ import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
+import java.util.NoSuchElementException;
+
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -36,7 +39,36 @@ public class QuestionServiceImpl implements QuestionService {
     private BadWordsFilter badWordsFilter;
 
 
+    private int like;
 
+    // Constructeurs, getters, setters et autres annotations...
+
+    @Override
+    public void addLikeToQuestion(int questionId) {
+        // Récupérer la question à partir de l'ID
+        Question question = questionRepository.findById(questionId)
+                .orElse(null);
+
+        // Ajouter un like à la question
+        question.addLike();
+
+        // Enregistrer les modifications dans la base de données
+        questionRepository.save(question);
+    }
+    @Override
+
+    // Méthode pour supprimer un like d'une question
+    public void removeLikeFromQuestion(int questionId) {
+        // Récupérer la question à partir de l'ID
+        Question question = questionRepository.findById(questionId).orElse(null);
+
+
+        // Supprimer un like de la question
+        question.removeLike();
+
+        // Enregistrer les modifications dans la base de données
+        questionRepository.save(question);
+    }
 
     @Override
     public Question ajouterQuestion(String contenu, MultipartFile imageFile) throws IOException {

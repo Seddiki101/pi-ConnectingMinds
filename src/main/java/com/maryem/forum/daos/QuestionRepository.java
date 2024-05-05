@@ -15,4 +15,5 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 
     @Query("SELECT r FROM Question r WHERE r.Contenu LIKE CONCAT('%', :contenu, '%')")
     List<Question> findByContenu(String contenu);
+
 }

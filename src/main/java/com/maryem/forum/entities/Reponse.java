@@ -21,6 +21,8 @@ public class Reponse  implements Serializable {
     private String FirstName;
     @JsonProperty("lastName")
     private String LastName ;
+    @JsonProperty("idUser")
+    private Long IdUser;
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime createdAt;
 

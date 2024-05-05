@@ -16,6 +16,8 @@ public interface QuestionService {
    //public Question ajouterQuestionI (String contenu , MultipartFile file);
    public Question updateQuestionById(Question question, int id) ;
    List<Question> searchPosts(String contenu);
+   public void addLikeToQuestion(int questionId);
+   public void removeLikeFromQuestion(int questionId);
 
 
    }
