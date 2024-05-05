@@ -1,6 +1,7 @@
 package com.tn.esprit.kanbanboard.controller;
 
 import com.tn.esprit.kanbanboard.entity.Conversation;
+import com.tn.esprit.kanbanboard.entity.GeneratedImage;
 import com.tn.esprit.kanbanboard.entity.Message;
 import com.tn.esprit.kanbanboard.entity.UserMessage;
 import com.tn.esprit.kanbanboard.service.ConversationService;
@@ -39,10 +40,12 @@ public class AiAssistantBotController {
         Optional<Conversation> optionalConversation= conversationService.findById(id);
         return optionalConversation.map(ResponseEntity::ok).orElse(ResponseEntity.noContent().build());
     }
-    @GetMapping("/ai/generate/image")
-    public ResponseEntity<String> generateImage(@RequestBody UserMessage userMessage) throws InterruptedException {
+    @PostMapping("/conversation/ai/generate/image")
+    public ResponseEntity<GeneratedImage> generateImage(@RequestBody UserMessage userMessage) throws InterruptedException {
+        GeneratedImage generatedImage = new GeneratedImage();
         String url = imageGenerationService.generateImage(userMessage.getMessage());
-        return ResponseEntity.ok(url);
+        generatedImage.setImageUrl(url);
+        return ResponseEntity.ok(generatedImage);
     }
     @PostMapping("/conversation")
     public ResponseEntity<Conversation> Conversation(
