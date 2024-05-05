@@ -1,7 +1,7 @@
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false  # Fetch registry from Eureka
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
 server:
   port: 8222
 spring:
@@ -28,9 +28,9 @@ spring:
           predicates:
             - Path=/api/v2/user/**
         - id: chat
-          uri: lb://chat  # Use load balancer prefix (lb://) followed by the Eureka service ID
+          uri: http://localhost:8083  # Use load balancer prefix (lb://) followed by the Eureka service ID
           predicates:
-            - Path=/api/v1/**
+            - Path=/api/v1/chat/**
 management:
   endpoint:
     health:

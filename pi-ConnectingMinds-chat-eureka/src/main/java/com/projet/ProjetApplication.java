@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
+@EnableDiscoveryClient
 public class ProjetApplication {
 
     public static void main(String[] args) {

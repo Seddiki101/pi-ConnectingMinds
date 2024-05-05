@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/api/v1/messages")
+@RequestMapping("/messages")
 public class MessageController {
     private final MessageService messageService;
     private final ChatService chatService;

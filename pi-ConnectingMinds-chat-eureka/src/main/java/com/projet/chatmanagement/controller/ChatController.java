@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/chats")
+@RequestMapping("/chats")
 public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate messagingTemplate;
