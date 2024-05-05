@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -50,11 +51,20 @@ public class ReviewController {
 
     @PostMapping("/addReview")
     @ResponseBody
-    public Review addReview(@RequestBody Review review,@RequestHeader("Authorization") String token) {
-        Long userId = getUserIdFromUserService(token);
-        if(userId != null ) {  review.setUserId(userId);}
-        this.resourceService.ReviewsUp(review.getResource().getResourceId());
-        return reviewService.addReview(review);
+    public Review addReview(@RequestBody Review review, @RequestHeader("Authorization") String token) {
+        try {
+            Long userId = getUserIdFromUserService(token);
+            if (userId != null) {
+                review.setUserId(userId);
+            }
+            this.resourceService.ReviewsUp(review.getResource().getResourceId());
+            return reviewService.addReview(review);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+
+            this.resourceService.ReviewsUp(review.getResource().getResourceId());
+            return reviewService.addReview(review);
+        }
     }
 
     @DeleteMapping("/deleteReview/{id}")

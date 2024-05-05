@@ -112,20 +112,34 @@ public class ResourceController {
     }
     @PostMapping("/addResource2")
     @ResponseBody
-    public Resource addResource2(@RequestBody Resource resource,@RequestHeader("Authorization") String token ) throws IOException, InterruptedException {
-//        Long userId = getUserIdFromUserService(token);
-//
-//        if(userId != null ) {  resource.setUserId(userId);}
+    public Resource addResource2(@RequestBody Resource resource, @RequestHeader("Authorization") String token) throws InterruptedException {
+        try {
+            Long userId = getUserIdFromUserService(token);
+            if (userId != null) {
+                resource.setUserId(userId);
+            }
 
+            resourceService.addResource(resource);
+            Thread.sleep(100); // Pause pour simuler un traitement
 
-        resourceService.addResource(resource);
-        sleep(0,1);
-        if(resource.getUrl().isEmpty()){this.ajout();}
+            if (resource.getUrl().isEmpty()) {
+                ajout(); // Méthode ajout() à implémenter
+            }
 
+            return resource;
+        } catch (Exception e) {
+            // Gérer l'exception ici
+            e.printStackTrace(); // Pour le logging, vous pouvez modifier cette partie
 
+            resourceService.addResource(resource);
+            Thread.sleep(100); // Pause pour simuler un traitement
 
-        return resource;
+            if (resource.getUrl().isEmpty()) {
+                ajout(); // Méthode ajout() à implémenter
+            }
 
+            return resource;// Ou renvoyer une réponse d'erreur appropriée
+        }
     }
 
     public void ajout () throws InterruptedException {
@@ -193,27 +207,27 @@ public class ResourceController {
 
 
 
-    /////Récupération du user///////////////////
+    ///Récupération du user///////////////////
 
-//    public Long getUserIdFromUserService(String authToken) {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.set("Authorization", authToken);
-//        HttpEntity<String> entity = new HttpEntity<>(headers);
-//
-//        ResponseEntity<Long> response = restTemplate().exchange(
-//                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
-//
-//        return response.getBody();
-//    }
-//
-//    public RestTemplate restTemplate() {
-//        return new RestTemplate();
-//    }
+    public Long getUserIdFromUserService(String authToken) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", authToken);
+        HttpEntity<String> entity = new HttpEntity<>(headers);
 
+        ResponseEntity<Long> response = restTemplate().exchange(
+                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
 
+        return response.getBody();
+    }
+
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
 
-    //////////////////amira///////////
+
+
+
 
 
 }
