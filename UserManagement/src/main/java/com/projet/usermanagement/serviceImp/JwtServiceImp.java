@@ -8,7 +8,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -107,5 +109,13 @@ public class JwtServiceImp implements JwtService {
         byte[] keyBytes = Decoders.BASE64URL.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
+    @Scheduled(fixedRate = 10800000) // 3 hours * 60 minutes * 60 seconds * 1000 milliseconds
+    @Transactional
+    public void deleteLoggedOutTokens() {
+        tokenRepository.deleteAllLoggedOutTokens();
+    }
+
 
 }

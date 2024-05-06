@@ -76,6 +76,7 @@ public class WorkshopController {
     public Workshop addWorkshop(@RequestHeader("Authorization") String token ,@RequestParam("file") MultipartFile file,
                                Workshop workshop) {
         try {
+            System.out.println("test1");
             Long userId = getUserIdFromUserService(token);
 
             if(userId != null ) {  workshop.setUser_id(userId);}
