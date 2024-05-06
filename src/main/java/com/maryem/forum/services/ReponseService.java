@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public interface ReponseService {
-    public Reponse ajouterReponse(String contenu ,String firstName,String lastName, int idQuestion, MultipartFile imageFile ,Long userID) ;
+    public Reponse ajouterReponse(String contenu , int idQuestion, MultipartFile imageFile ,Long userID) ;
     public Reponse updateAnswer(Reponse reponse,Long userID );
     public void DeleteAnswer(Reponse reponse) ;
     public void DeleteAnswerById(int id);
