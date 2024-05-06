@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface QuestionService {
 
-   public Question ajouterQuestion(String contenu, MultipartFile imageFile) throws IOException;
+   public Question ajouterQuestion(String contenu,String firstName,String lastName, MultipartFile imageFile , Long userId) throws IOException;
 
    public void DeleteQuestion(int id);
    public List<Question> getAllQuestion();

@@ -65,6 +65,8 @@ public class ReponseController {
     @PostMapping("/addResponse/{idQuestion}")
     public Reponse ajouterReponse(
             @RequestParam String contenu,
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @PathVariable int idQuestion ,
             @RequestHeader("Authorization") String token
@@ -74,7 +76,7 @@ public class ReponseController {
         Long userId = getUserIdFromUserService(token);
 
 
-        return reponseService.ajouterReponse(contenu, idQuestion, imageFile , userId );
+        return reponseService.ajouterReponse(contenu ,firstName,lastName ,idQuestion,imageFile , userId );
     }
 
 

@@ -71,11 +71,18 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question ajouterQuestion(String contenu, MultipartFile imageFile) throws IOException {
+    public Question ajouterQuestion(String contenu,String firstName,String lastName, MultipartFile imageFile , Long userId) throws IOException {
         if (!StringUtils.isEmpty(contenu)) {
             Question newQuestion = new Question();
             String filteredContenu = badWordsFilter.filter(contenu);
             newQuestion.setContenu(filteredContenu);
+
+            if(userId !=null && userId !=0 ){
+                newQuestion.setIdUser(userId);
+            }
+
+            if(firstName != null ) newQuestion.setFirstName(firstName);
+            if(lastName != null )  newQuestion.setLastName(lastName);
 
             // Vérifier si une image a été fournie
             if (imageFile != null && !imageFile.isEmpty()) {

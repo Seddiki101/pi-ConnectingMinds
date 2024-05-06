@@ -69,7 +69,7 @@ public class ReponseServiceImpl implements ReponseService {
 
     @Override
     @Transactional
-    public Reponse ajouterReponse(String contenu, int idQuestion, MultipartFile imageFile ,Long userID) {
+    public Reponse ajouterReponse(String contenu ,String firstName,String lastName, int idQuestion, MultipartFile imageFile ,Long userID) {
         // Vérifier si le contenu de la réponse est null ou vide
         if (StringUtils.isEmpty(contenu)) {
             LOG.error("Posted answer content is NULL or empty");
@@ -101,6 +101,8 @@ public class ReponseServiceImpl implements ReponseService {
                 return null;
             }
         }
+        if(firstName != null ) newReponse.setFirstName(firstName);
+        if(lastName != null )  newReponse.setLastName(lastName);
 
         // Associer la réponse à la question
         newReponse.setQuestion(question);

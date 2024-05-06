@@ -18,6 +18,10 @@ import static net.sf.jsqlparser.util.validation.metadata.NamedObject.index;
 @RestController
 @CrossOrigin
 public class QuestionController {
+    @Resource
+    QuestionService questionService;
+
+
     @PostMapping("/{questionId}/like")
     public ResponseEntity<String> addLikeToQuestion(@PathVariable int questionId) {
         try {
@@ -48,7 +52,7 @@ public class QuestionController {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         ResponseEntity<Long> response = restTemplate().exchange(
-                "http://localhost:8082/getUserSpot", HttpMethod.GET, entity, Long.class);
+                "http://localhost:8082/api/v2/user/back/getUserSpot", HttpMethod.GET, entity, Long.class);
 
         return response.getBody();
     }
@@ -56,8 +60,7 @@ public class QuestionController {
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
-    @Resource
-    QuestionService questionService;
+
 
 
 
@@ -65,10 +68,18 @@ public class QuestionController {
     @ResponseBody
     public Question ajouterQuestion(
             @RequestParam("contenu") String contenu,
-            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile
+            @RequestParam("firstName") String firstName,
+            @RequestParam("lastName") String lastName,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            @RequestHeader("Authorization") String token
     ) {
         try {
-            return questionService.ajouterQuestion(contenu, imageFile);
+            Long userId = getUserIdFromUserService(token);
+if(userId == null) userId = 0L;
+            System.out.println("message"+userId);
+
+
+            return questionService.ajouterQuestion(contenu,lastName,firstName, imageFile,userId);
         } catch (IOException e) {
             e.printStackTrace();
             return null; // Gérer l'exception d'une manière appropriée
