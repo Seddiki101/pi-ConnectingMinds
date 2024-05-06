@@ -1,6 +1,8 @@
 package com.projet.usermanagement.controller;
 
+import com.projet.usermanagement.dto.SearchCriteria;
 import com.projet.usermanagement.entity.User;
+import com.projet.usermanagement.serviceImp.UserSearchService;
 import com.projet.usermanagement.serviceImp.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,7 @@ public class BackController {
 
     @Autowired
     private UserServiceImp userService;
-
+    private UserSearchService userSearchService;
 
     @RequestMapping("/getUserData")
     @GetMapping
@@ -64,6 +66,10 @@ public class BackController {
     public ResponseEntity<List<User>> getUsersByIds(@RequestBody List<Long> ids) {
         List<User> users = userService.getUsersByIds(ids);
         return ResponseEntity.ok(users);
+    }
+    @PostMapping("/dynamicSearch")
+    public List<User> searchUsers(@RequestBody SearchCriteria criteria) {
+        return userSearchService.findUsersByKeyword1(criteria.getKeyword());
     }
 
 
