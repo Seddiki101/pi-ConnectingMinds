@@ -12,6 +12,7 @@ import com.projet.usermanagement.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.UUID;
 
@@ -40,10 +41,18 @@ public class AuthenticationController {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
+    /*
     @GetMapping(path = "/confirmEmail")
     public String confirm(@RequestParam("token") String token) {
-        
+
         return authService.confirmToken(token);
+    }
+    */
+    @GetMapping(path = "/confirmEmail")
+    public RedirectView confirm(@RequestParam("token") String token) {
+        String url = authService.confirmToken(token);
+        String url2 = "http://localhost:4200/login" ;
+        return new RedirectView(url2);
     }
 
     /*
