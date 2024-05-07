@@ -1,6 +1,7 @@
 package com.projet.chatmanagement.controller;
 
 import com.projet.chatmanagement.dto.message.MessageCreateDTO;
+import com.projet.chatmanagement.dto.message.MessageDTO;
 import com.projet.chatmanagement.dto.message.MessageUpdateDTO;
 import com.projet.chatmanagement.dto.message.NewMessageDTO;
 import com.projet.chatmanagement.entity.Chat;
@@ -33,21 +34,27 @@ public class MessageController {
     }
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<MessageCreateDTO>> sendMessage(@Valid @RequestBody MessageCreateDTO messageDTO) {
-        messageDTO.setTimestamp(LocalDateTime.now());
-
-        return getResponseEntityCompletableFuture(messageDTO);
+    public CompletableFuture<ResponseEntity<MessageDTO>> sendMessage(@Valid @RequestBody MessageCreateDTO messageDTO) {
+        return messageService.sendMessage(messageDTO)
+                .thenApply(this::convertToMessageDTO)
+                .thenApply(dto -> sendAndRespond(dto));
     }
 
     @PostMapping("/new")
-    public CompletableFuture<ResponseEntity<MessageCreateDTO>> newMessage(@Valid @RequestBody NewMessageDTO newMessage) {
-
+    public CompletableFuture<ResponseEntity<MessageDTO>> newMessage(@Valid @RequestBody NewMessageDTO newMessage) {
         Chat chat = chatService.getOrCreateChat(newMessage.getSenderId(), newMessage.getRecieverId());
         MessageCreateDTO messageDTO = new MessageCreateDTO();
         messageDTO.setContent(newMessage.getContent());
         messageDTO.setUserId(newMessage.getSenderId());
         messageDTO.setChatId(chat.getChatId());
-        return getResponseEntityCompletableFuture(messageDTO);
+
+        return messageService.sendMessage(messageDTO)
+                .thenApply(this::convertToMessageDTO)
+                .thenApply(dto -> sendAndRespond(dto));
+    }
+    private ResponseEntity<MessageDTO> sendAndRespond(MessageDTO dto) {
+        messagingTemplate.convertAndSend("/topic/chat" + dto.getChatId(), dto);
+        return ResponseEntity.ok(dto);
     }
 
     private CompletableFuture<ResponseEntity<MessageCreateDTO>> getResponseEntityCompletableFuture(MessageCreateDTO messageDTO) {
@@ -60,6 +67,9 @@ public class MessageController {
                     responseDTO.setTimestamp(message.getTimestamp()); // Pass the timestamp to the DTO
 
                     // Send WebSocket message to notify clients about the new message
+                    System.out.println("===========================");
+                    System.out.println("Sending message: " + responseDTO);
+
                     messagingTemplate.convertAndSend("/topic/chat" + message.getChat().getChatId(), responseDTO);
 
                     return ResponseEntity.ok(responseDTO);
@@ -79,6 +89,7 @@ public class MessageController {
 
         // Calling the service method with the extracted values
         Message updatedMessage = messageService.editMessage(messageId, newContent);
+        messagingTemplate.convertAndSend("/topic/chat" + updatedMessage.getChat().getChatId(), updatedMessage);
 
         return ResponseEntity.ok(updatedMessage);
     }
@@ -101,9 +112,15 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getAllMessagesForChat(chatId));
     }
 
-    private Message convertToMessage(MessageCreateDTO dto) {
-        Message message = new Message();
-        message.setContent(dto.getContent());
-        return message;
+    private MessageDTO convertToMessageDTO(Message message) {
+        MessageDTO dto = new MessageDTO();
+        dto.setMessageId(message.getMessageId());
+        dto.setContent(message.getContent());
+        dto.setChatId(message.getChat().getChatId());
+        dto.setUserId(message.getUserId());
+        dto.setTimestamp(message.getTimestamp());
+        dto.setSeen(message.getSeen());
+        dto.setDeleted(message.getDeleted());
+        return dto;
     }
 }
