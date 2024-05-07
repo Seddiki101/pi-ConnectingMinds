@@ -27,8 +27,9 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     private UserValidator userValidator;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+ @Autowired
+ private PasswordEncoder passwordEncoder;
+
 
     public List<User> getAllUsers()
     {
@@ -120,10 +121,9 @@ public class UserServiceImp implements UserService {
             user.setPhone(request.getPhone() );
             user.setAddress( request.getAddress() );
 
-
-            String encodedPassword = passwordEncoder.encode(request.getPassword());
-            System.out.println("the new passwird is " + request.getPassword() );
-            user.setPassword(encodedPassword);
+         String encodedPassword = passwordEncoder.encode(request.getPassword());
+         System.out.println("the new password is " + request.getPassword() );
+         user.setPassword(encodedPassword);
 
             userRepository.save(user);
         }
