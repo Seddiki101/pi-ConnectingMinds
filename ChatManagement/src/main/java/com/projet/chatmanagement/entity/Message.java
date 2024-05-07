@@ -33,5 +33,5 @@ public class Message {
     private Chat chat;
 
     private Boolean seen= false;
-    private Boolean deleted;
+    private Boolean deleted= false;
 }

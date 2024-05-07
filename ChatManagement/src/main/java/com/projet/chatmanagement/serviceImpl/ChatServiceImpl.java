@@ -1,9 +1,11 @@
 package com.projet.chatmanagement.serviceImpl;
 
 import com.projet.chatmanagement.dao.ChatDao;
+import com.projet.chatmanagement.dao.MessageDao;
 import com.projet.chatmanagement.dto.chat.ChatPreview;
 import com.projet.chatmanagement.dto.user.UserDTO;
 import com.projet.chatmanagement.entity.Chat;
+import com.projet.chatmanagement.entity.Message;
 import com.projet.chatmanagement.service.ChatService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class ChatServiceImpl implements ChatService {
 
     @Resource
     private ChatDao chatDao;
+    @Resource
+    private MessageDao messageDao;
 
     @Resource
     private UserManagementClient userManagementClient;
@@ -63,12 +67,18 @@ public class ChatServiceImpl implements ChatService {
     @Override
     @Transactional
     public void deleteChat(Long chatId) {
-        int deletedCount = chatDao.deleteByChatId(chatId);
-        if (deletedCount == 0) {
-            throw new RuntimeException("No chat found with ID: " + chatId);
+        // First, fetch and delete all messages associated with the chat
+        List<Message> messages = messageDao.findByChatId(chatId);
+        if (!messages.isEmpty()) {
+            messageDao.deleteAll(messages);
+            // Explicitly flush changes to ensure messages are deleted before proceeding
+            messageDao.flush();
         }
-        System.out.println("Deleted chat with ID: " + chatId);
+
+        // Attempt to delete the chat
+        chatDao.deleteById(chatId);
     }
+
     @Override
     public List<ChatPreview> getAllChatsForUser(Long userId, String token) {
         List<Object[]> results = chatDao.findChatDataByUserId(userId);
