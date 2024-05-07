@@ -5,7 +5,9 @@ import com.esprit.resourcesmanagement.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,8 +38,17 @@ public class CategoryController {
 
     @PostMapping("/addCategory")
     @ResponseBody
-    public Category addCategory(@RequestBody Category category) {
-        return categoryService.addCategory(category);
+    public Category addCategory(@RequestParam("image") MultipartFile image,
+                                @RequestParam("name") String name,
+                                @RequestParam("description") String description) throws IOException {
+        Category category =new Category();
+        category.setName(name);
+        category.setDescription(description);
+        if(image != null){  category.setImage(image.getBytes());}
+
+
+
+            return categoryService.addCategory(category);
     }
 
     @DeleteMapping("/deleteCategory/{id}")
