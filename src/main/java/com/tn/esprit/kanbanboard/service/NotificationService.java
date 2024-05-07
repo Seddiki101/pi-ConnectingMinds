@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface NotificationService {
     List<Notification> findAll();
     Optional<Notification> findById(Long ID);
-    Notification create(Long teamId,Notification notification);
+    Notification create(Notification notification);
     Notification update(Notification notification);
     void delete(Notification notification);
 }

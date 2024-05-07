@@ -10,6 +10,7 @@ public interface ProjectService {
     List<Project> findByOwnerId(Long ownerId);
     Optional<Project> findByName(String name);
     Optional<Project> findById(Long ID);
+    Optional<Project> findByTeamId(Long teamId);
     Project create(Project project);
     Project update(Project project);
     void delete(Project project);

@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface ProjectDao extends JpaRepository<Project,Long> {
     List<Project> findByOwnerId(Long ownerId);
     Optional<Project> findByName(String name);
+    Optional<Project> findByTeamsTeamId(Long teamId);
 
     @Query("SELECT p FROM Project p " +
             "LEFT JOIN p.teams t " +

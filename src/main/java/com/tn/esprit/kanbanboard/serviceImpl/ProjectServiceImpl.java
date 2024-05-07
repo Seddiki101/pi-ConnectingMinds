@@ -40,6 +40,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public Optional<Project> findByTeamId(Long teamId) {
+        return projectDao.findByTeamsTeamId(teamId);
+    }
+
+    @Override
     public Project create(Project project) {
         return projectDao.save(project);
     }

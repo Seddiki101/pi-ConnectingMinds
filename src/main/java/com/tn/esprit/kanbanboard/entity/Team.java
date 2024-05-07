@@ -31,8 +31,6 @@ public class Team implements Serializable {
     @JsonIgnore
     private Project project;
     @OneToMany(mappedBy = "team",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<Notification> notifications = new ArrayList<>();
-    @OneToMany(mappedBy = "team",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Event> events = new ArrayList<>();
     @OneToMany(mappedBy = "team",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();

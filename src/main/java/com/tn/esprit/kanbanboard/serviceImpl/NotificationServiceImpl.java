@@ -13,11 +13,10 @@ import java.util.Optional;
 @Service
 public class NotificationServiceImpl implements NotificationService {
     private final NotificationDao notificationDao;
-    private final TeamDao teamDao;
     @Autowired
-    public NotificationServiceImpl(NotificationDao notificationDao, TeamDao teamDao) {
+    public NotificationServiceImpl(NotificationDao notificationDao) {
         this.notificationDao = notificationDao;
-        this.teamDao = teamDao;
+
     }
 
     @Override
@@ -31,16 +30,9 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Notification create(Long teamId,Notification notification) {
-        Optional<Team> optionalTeam = teamDao.findById(teamId);
-        if(optionalTeam.isPresent()){
-            Team team = optionalTeam.get();
-            notification.setTeam(team);
+    public Notification create(Notification notification) {
             Notification result = notificationDao.save(notification);
             return result;
-        }
-        System.out.println("Error : Team doesn't exist.");
-        return null;
     }
 
     @Override

@@ -35,6 +35,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public Optional<Team> findByTaskId(Long taskId) {
+        return teamDao.findByTasksTaskId(taskId);
+    }
+
+    @Override
     public Team create(Long projectId, Team team) {
         Optional<Project> optionalProject = projectDao.findById(projectId);
         if(optionalProject.isPresent()){

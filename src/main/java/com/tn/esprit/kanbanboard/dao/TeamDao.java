@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface TeamDao extends JpaRepository<Team,Long> {
     Optional<Team> findByName(String name);
+
+    Optional<Team> findByTasksTaskId(Long taskId);
 }
