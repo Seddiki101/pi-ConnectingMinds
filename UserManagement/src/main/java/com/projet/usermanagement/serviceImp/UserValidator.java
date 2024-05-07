@@ -23,18 +23,21 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object obj, Errors errors) {
-        if (obj instanceof User) {
-            validateUser((User) obj, errors);
-        } else if (obj instanceof RegistrationRequest) {
+         if (obj instanceof RegistrationRequest) {
+             System.out.println("validator 1");
             validateRegistrationRequest((RegistrationRequest) obj, errors);
         }
     }
 
+    /*
     private void validateUser(User user, Errors errors) {
-        // Existing validation logic for User...
     }
+    */
 
     private void validateRegistrationRequest(RegistrationRequest request, Errors errors) {
+
+        System.out.println("validator 2");
+
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "field.required", "First name is required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "field.required", "Last name is required");
 
