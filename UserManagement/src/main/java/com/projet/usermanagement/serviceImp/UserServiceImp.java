@@ -124,7 +124,7 @@ public class UserServiceImp implements UserService {
                 String encodedPassword = passwordEncoder.encode(request.getPassword());
             System.out.println("the new password is " + request.getPassword());
             user.setPassword(encodedPassword);
-        }
+            }
             userRepository.save(user);
         }
 
