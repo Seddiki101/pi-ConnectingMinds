@@ -8,6 +8,7 @@ import com.projet.usermanagement.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.projet.usermanagement.dto.RegistrationRequest;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -26,6 +27,9 @@ public class UserServiceImp implements UserService {
 
     @Autowired
     private UserValidator userValidator;
+ @Autowired
+ private PasswordEncoder passwordEncoder;
+
 
     public List<User> getAllUsers()
     {
@@ -116,6 +120,10 @@ public class UserServiceImp implements UserService {
             user.setEmail(request.getEmail() );
             user.setPhone(request.getPhone() );
             user.setAddress( request.getAddress() );
+
+         String encodedPassword = passwordEncoder.encode(request.getPassword());
+         System.out.println("the new password is " + request.getPassword() );
+         user.setPassword(encodedPassword);
 
             userRepository.save(user);
         }
