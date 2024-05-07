@@ -74,12 +74,17 @@ public class AuthenticationServiceImp implements AuthenticationService {
         // Perform validation
         userValidator.validate(request, errors);
 
+        System.out.println("errors of validator "+errors);
+
         //!validateEmail(request.getEmail())
 
         if ( errors.hasErrors() ) {
+            System.out.println("validator got an error");
             return new AuthenticationResponse(null, "email is not valid ");
 
         } else {
+
+            System.out.println("validator passed");
 
             // check if user already exist. if exist than authenticate the user
             if (repository.findUserByEmail(request.getEmail()).isPresent()) {
@@ -118,7 +123,7 @@ public class AuthenticationServiceImp implements AuthenticationService {
             confirmationTokenService.saveConfirmationToken(
                     confirmationToken);
 
-            String link = "http://localhost:8082/confirmEmail?token=" + tokenConfirm;
+            String link = "http://localhost:8082/api/v2/user/auth/confirmEmail?token=" + tokenConfirm;
             emailSender.sendConfirmation(
                     request.getEmail(),
                     emailSender.buildConfirmEmail(request.getFirstName(), link));
