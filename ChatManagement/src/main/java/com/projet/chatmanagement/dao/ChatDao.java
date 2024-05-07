@@ -36,21 +36,6 @@ public interface ChatDao extends JpaRepository<Chat, Long> {
         "ORDER BY m.timestamp DESC", nativeQuery = true)
 List<Object[]> findChatDataByUserId(@Param("userId") Long userId);
 
-
-@Query(value ="SELECT user_id from chat_users  WHERE chat_id = :chatId AND user_id != :userId" ,nativeQuery = true)
-Long findOtherMemberId(@Param("userId") Long userId, @Param("chatId") Long chatId);
-
-
-
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Chat c WHERE c.chatId = :chatId")
-    int deleteByChatId(Long chatId);
-
-    /*
-    @Query("SELECT c FROM Chat c WHERE :userId1 MEMBER OF c.memberIds AND :userId2 MEMBER OF c.memberIds AND SIZE(c.memberIds) = 2")
-    Optional<Chat> findChatByUserIds(Long userId1, Long userId2);
-    */
     @Query("SELECT c FROM Chat c WHERE (:userId1 MEMBER OF c.memberIds AND :userId2 MEMBER OF c.memberIds) OR (:userId2 MEMBER OF c.memberIds AND :userId1 MEMBER OF c.memberIds) AND SIZE(c.memberIds) = 2")
     Optional<Chat> findChatByUserIds(Long userId1, Long userId2);
 

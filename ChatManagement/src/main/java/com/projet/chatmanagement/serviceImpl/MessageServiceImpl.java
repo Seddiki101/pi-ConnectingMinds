@@ -57,13 +57,14 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     @Transactional
-    public void deleteMessage(Long messageId) {
+    public Message deleteMessage(Long messageId) {
         Message message = messageDao.findById(messageId)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
         message.setDeleted(true);
         message.setContent("This message was deleted");
-        messageDao.save(message);
+        return messageDao.save(message);  // Return the updated message
     }
+
 
     @Override
     @Transactional

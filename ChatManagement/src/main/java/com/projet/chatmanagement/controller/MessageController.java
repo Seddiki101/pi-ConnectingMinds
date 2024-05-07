@@ -97,7 +97,9 @@ public class MessageController {
     // Other methods remain unchanged
     @DeleteMapping("/{messageId}")
     public ResponseEntity<Void> deleteMessage(@PathVariable Long messageId) {
-        messageService.deleteMessage(messageId);
+        Message deletedMessage = messageService.deleteMessage(messageId);
+        MessageDTO dto = convertToMessageDTO(deletedMessage);
+        messagingTemplate.convertAndSend("/topic/chat" + deletedMessage.getChat().getChatId(), dto);
         return ResponseEntity.ok().build();
     }
 

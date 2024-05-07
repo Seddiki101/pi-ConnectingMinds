@@ -10,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 public interface MessageService {
     CompletableFuture<Message> sendMessage(MessageCreateDTO messageDTO); // Updated method
     Message editMessage(Long messageId, String newContent);
-    void deleteMessage(Long messageId);
+    Message deleteMessage(Long messageId);
     void markMessageAsSeen(Long messageId);
     List<Message> getAllMessagesForChat(Long chatId);
 }

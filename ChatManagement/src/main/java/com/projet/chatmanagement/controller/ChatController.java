@@ -47,8 +47,6 @@ public class ChatController {
             chatService.deleteChat(chatId);
             return ResponseEntity.ok().build();
         } catch (RuntimeException ex) {
-            // Assuming RuntimeException is thrown when the chat is not found.
-            // It's better to use a more specific exception if your application defines one.
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No chat with id " + chatId);
         }
     }

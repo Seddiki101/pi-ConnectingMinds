@@ -26,7 +26,7 @@ public class Chat {
 
     private Set<Long> memberIds;
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
     //used @JsonManagedReference to avoid infinite json recursion
     @JsonManagedReference
     private List<Message> messages;
