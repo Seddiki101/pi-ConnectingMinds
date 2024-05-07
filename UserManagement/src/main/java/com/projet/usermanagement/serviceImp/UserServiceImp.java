@@ -115,16 +115,16 @@ public class UserServiceImp implements UserService {
 
         if ( ! errors.hasErrors() ) {
 
-            user.setFirstName(request.getFirstName() );
-            user.setLastName(request.getLastName() );
-            user.setEmail(request.getEmail() );
-            user.setPhone(request.getPhone() );
-            user.setAddress( request.getAddress() );
-
-         String encodedPassword = passwordEncoder.encode(request.getPassword());
-         System.out.println("the new password is " + request.getPassword() );
-         user.setPassword(encodedPassword);
-
+            user.setFirstName(request.getFirstName());
+            user.setLastName(request.getLastName());
+            user.setEmail(request.getEmail());
+            user.setPhone(request.getPhone());
+            user.setAddress(request.getAddress());
+            if (  request.getPassword().length() > 8 ){
+                String encodedPassword = passwordEncoder.encode(request.getPassword());
+            System.out.println("the new password is " + request.getPassword());
+            user.setPassword(encodedPassword);
+        }
             userRepository.save(user);
         }
 
