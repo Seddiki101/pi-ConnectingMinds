@@ -36,7 +36,7 @@ public class UserValidator implements Validator {
 
     private void validateRegistrationRequest(RegistrationRequest request, Errors errors) {
 
-        System.out.println("validator 2");
+        System.out.println("validator started");
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName", "field.required", "First name is required");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName", "field.required", "Last name is required");

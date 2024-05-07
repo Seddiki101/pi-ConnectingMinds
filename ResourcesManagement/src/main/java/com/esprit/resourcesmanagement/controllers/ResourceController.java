@@ -1,5 +1,6 @@
 package com.esprit.resourcesmanagement.controllers;
 
+import com.esprit.resourcesmanagement.entities.Category;
 import com.esprit.resourcesmanagement.entities.Resource;
 //import com.esprit.resourcesmanagement.entities.Subscribe;
 import com.esprit.resourcesmanagement.services.CategoryService;
@@ -93,102 +94,83 @@ public class ResourceController {
 //        }
 
 
-     return resource != null ? this.resourceService.updateResource(resource,id) : null;
+        return resource != null ? this.resourceService.updateResource(resource,id) : null;
 
     }
+
 
     @PostMapping("/addResource")
     @ResponseBody
-    public byte[] addResource(@RequestParam("content") MultipartFile content) throws IOException {
+    public Resource addResource(@RequestParam(name = "content", required = false) MultipartFile content,
+                                @RequestParam("name") String name,
+                                @RequestParam("description") String description,
+                                @RequestParam("url") String url,
+                                @RequestParam("categoryId") Long categoryId,
+                                @RequestHeader("Authorization") String token) throws IOException {
         Resource resource = new Resource();
-        if(content != null){  resource.setContent(content.getBytes());
-            resource.setContentType(content.getContentType());
-            resource.setSize(content.getSize());
-            resourceService.addResource(resource);
-        }
-
-
-        return resource.getContent();
-    }
-    @PostMapping("/addResource2")
-    @ResponseBody
-    public Resource addResource2(@RequestBody Resource resource, @RequestHeader("Authorization") String token) throws InterruptedException {
         try {
             Long userId = getUserIdFromUserService(token);
             if (userId != null) {
                 resource.setUserId(userId);
             }
 
-            resourceService.addResource(resource);
-            Thread.sleep(100); // Pause pour simuler un traitement
+            if(content != null){  resource.setContent(content.getBytes());
+                resource.setContentType(content.getContentType());
+                resource.setSize(content.getSize());
 
-            if (resource.getUrl().isEmpty()) {
-                ajout(); // Méthode ajout() à implémenter
             }
+            Category category = categoryService.findCategoryById(categoryId);
+            if (category != null) {
+                resource.setCategory(category);
+            } else {
+                System.out.println("category pas trouvé !");
+            }
+
+            resource.setName(name);
+            resource.setDescription(description);
+            resource.setUrl(url);
+            Date date = new Date(); // Obtenez la date actuelle
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Spécifiez le format de date
+
+            // Formatez la date selon le format spécifié
+            String formattedDate = dateFormat.format(date);
+            resource.setDateCreation(formattedDate);
+            resourceService.addResource(resource);
+
+            return resource;}
+        catch (Exception e) {
+            e.printStackTrace(); // Pour le logging, vous pouvez modifier cette partie
+            resource.setUserId(2L);
+
+            if(content != null){  resource.setContent(content.getBytes());
+                resource.setContentType(content.getContentType());
+                resource.setSize(content.getSize());
+
+            }
+            Category category = categoryService.findCategoryById(categoryId);
+            if (category != null) {
+                resource.setCategory(category);
+            } else {
+                System.out.println("category pas trouvé !");
+            }
+
+            resource.setName(name);
+            resource.setDescription(description);
+            resource.setUrl(url);
+            Date date = new Date(); // Obtenez la date actuelle
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Spécifiez le format de date
+
+            // Formatez la date selon le format spécifié
+            String formattedDate = dateFormat.format(date);
+            resource.setDateCreation(formattedDate);
+            resourceService.addResource(resource);
 
             return resource;
-        } catch (Exception e) {
-            // Gérer l'exception ici
-            e.printStackTrace(); // Pour le logging, vous pouvez modifier cette partie
-
-            resourceService.addResource(resource);
-            Thread.sleep(100); // Pause pour simuler un traitement
-
-            if (resource.getUrl().isEmpty()) {
-                ajout(); // Méthode ajout() à implémenter
-            }
-
-            return resource;// Ou renvoyer une réponse d'erreur appropriée
         }
+
     }
 
-    public void ajout () throws InterruptedException {
-        sleep(0,1);
-        Resource lastresource= this.resourceService.getLastAddedResource();
 
-
-        Long beforeLastId =lastresource.getResourceId()-1;
-
-        Resource beforeLastResource =this.resourceService.findResourceById(beforeLastId);
-        if (lastresource.getContent()==null){
-            System.out.println("dans if ajout ");
-            Date date = new Date(); // Obtenez la date actuelle
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Spécifiez le format de date
-
-            // Formatez la date selon le format spécifié
-            String formattedDate = dateFormat.format(date);
-            lastresource.setDateCreation(formattedDate);
-            lastresource.setContent(beforeLastResource.getContent());
-            lastresource.setContentType(beforeLastResource.getContentType());
-            lastresource.setUserId(beforeLastResource.getUserId());
-            lastresource.setCategory(this.categoryService.findCategoryById(1L));
-            this.resourceService.deleteResource(beforeLastId);
-
-        }
-
-        else {
-            System.out.println("dans else ajout ");
-            Date date = new Date(); // Obtenez la date actuelle
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Spécifiez le format de date
-
-            // Formatez la date selon le format spécifié
-            String formattedDate = dateFormat.format(date);
-            lastresource.setDateCreation(formattedDate);
-            lastresource.setName(beforeLastResource.getName());
-            lastresource.setDescription(beforeLastResource.getDescription());
-            lastresource.setUserId(beforeLastResource.getUserId());
-            lastresource.setCategory(this.categoryService.findCategoryById(1L));
-            this.resourceService.deleteResource(beforeLastId);
-
-        }
-
-
-
-
-
-
-
-    }
 
 
     @DeleteMapping("/deleteResource/{id}")

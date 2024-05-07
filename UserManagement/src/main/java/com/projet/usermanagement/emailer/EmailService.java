@@ -37,7 +37,7 @@ public class EmailService implements EmailSender{
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject("Confirm your email");
-            helper.setFrom("hello@connectingMinds.com");
+            helper.setFrom("seddiki915@gmail.com");
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("failed to send email", e);
@@ -45,7 +45,8 @@ public class EmailService implements EmailSender{
         }
     }
 
-    public String sendForgetPasswordEmail(String recipientEmail, String link) {
+    @Async
+    public void sendForgetPasswordEmail(String recipientEmail, String link) {
         String subject = "Here's the link to reset your password";
 
         try {
@@ -63,13 +64,13 @@ public class EmailService implements EmailSender{
             helper.setText(htmlMsg, true); // true indicates this is an HTML email
             helper.setTo(recipientEmail);
             helper.setSubject(subject);
-            helper.setFrom("t0367849@gmail.com");
+            helper.setFrom("seddiki915@gmail.com");
 
             mailSender.send(mimeMessage);
-            return "Mail Sent Successfully...";
+
         } catch (MessagingException e) {
             LOGGER.error("Failed to send email", e);
-            return "Error while Sending Mail";
+
         }
     }
 
