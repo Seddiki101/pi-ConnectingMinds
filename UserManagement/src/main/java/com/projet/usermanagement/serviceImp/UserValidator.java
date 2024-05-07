@@ -57,7 +57,7 @@ public class UserValidator implements Validator {
             errors.rejectValue("phone", "phone.invalid", "Phone number must be numeric");
         }
 
-        if (request.getPassword() == null || request.getPassword().length() < 8) {
+        if (request.getPassword().length() > 1 || request.getPassword().length() < 8) {
             errors.rejectValue("password", "password.short", "Password must be at least 8 characters long");
         }
 
