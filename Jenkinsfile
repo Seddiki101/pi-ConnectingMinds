@@ -6,6 +6,10 @@ pipeline {
         NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
     }
 
+    options {
+        skipDefaultCheckout() // Désactive la récupération automatique du code source pour le configurer manuellement dans chaque étape
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -16,6 +20,14 @@ pipeline {
 
         stage('Build') {
             steps {
+                // Configuration éventuelle du proxy Maven
+                script {
+                    if (isUnix()) {
+                        sh 'export MAVEN_OPTS="-Dhttp.proxyHost=proxy-host -Dhttp.proxyPort=proxy-port"'
+                    } else {
+                        bat 'set MAVEN_OPTS="-Dhttp.proxyHost=proxy-host -Dhttp.proxyPort=proxy-port"'
+                    }
+                }
                 // Construction du projet Maven
                 sh 'mvn clean package'
             }
