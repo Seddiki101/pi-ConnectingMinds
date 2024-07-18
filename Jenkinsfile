@@ -2,29 +2,28 @@ pipeline {
     agent any
 
     environment {
-        // Define environment variables as needed
         SONAR_HOST_URL = 'http://192.168.33.10:9000/'
-        NEXUS_REPO_URL = 'http://192.168.33.10:8081//repository/maven-releases/'
+        NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout code from Git repository
+                // Vérification et récupération du code depuis le dépôt Git (branche par défaut)
                 git 'https://github.com/Seddiki101/pi-ConnectingMinds.git'
             }
         }
 
         stage('Build') {
             steps {
-                // Build the Maven project
+                // Construction du projet Maven
                 sh 'mvn clean package'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                // Execute SonarQube analysis
+                // Analyse avec SonarQube
                 withSonarQubeEnv('SonarQube Server') {
                     sh 'mvn sonar:sonar'
                 }
@@ -33,19 +32,28 @@ pipeline {
 
         stage('Deploy to Nexus') {
             steps {
-                // Deploy artifacts to Nexus repository
+                // Déploiement des artefacts vers le repository Nexus
                 sh 'mvn deploy'
             }
         }
 
         stage('Deploy to Production') {
             when {
-                branch 'master' // Example condition: deploy only on master branch
+                branch 'master' // Déployer uniquement depuis la branche master
             }
             steps {
-                // Example deployment step to production
+                // Exemple de déploiement vers l'environnement de production
                 sh 'ssh user@production-server "deploy-script.sh"'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline exécuté avec succès!'
+        }
+        failure {
+            echo 'Le pipeline a échoué - vérifiez les logs pour plus de détails.'
         }
     }
 }
