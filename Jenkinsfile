@@ -39,7 +39,7 @@ pipeline {
 
         stage('Deploy to Production') {
             when {
-                branch 'Forum' // Déployer uniquement depuis la branche main
+                branch 'Forum' // Déployer uniquement depuis la branche Forum
             }
             steps {
                 // Exemple de déploiement vers l'environnement de production
