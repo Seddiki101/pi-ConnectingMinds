@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Vérification et récupération du code depuis le dépôt Git
-                git branch: 'main', url: 'https://github.com/Seddiki101/pi-ConnectingMinds.git'
+                git branch: 'Forum', url: 'https://github.com/Seddiki101/pi-ConnectingMinds.git'
             }
         }
 
