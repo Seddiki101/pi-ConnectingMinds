@@ -6,10 +6,7 @@ pipeline {
         NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
     }
 
-    tools {
-        // Spécifiez l'installation de Maven configurée dans Jenkins
-        maven 'Maven 3.6.3'
-    }
+   
 
     stages {
         stage('Checkout') {
