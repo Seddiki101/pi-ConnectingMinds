@@ -1,9 +1,8 @@
 pipeline {
     agent any
 
-    tools {
-        // Utilisation de l'installation Maven configurée dans Jenkins
-        maven 'Maven 3.6.3'
+    environment {
+        MAVEN_HOME = "${tool 'Maven 3.6.3'}"
     }
 
     stages {
@@ -15,7 +14,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn clean package'
+                sh '${MAVEN_HOME}/bin/mvn clean package'
             }
         }
 
