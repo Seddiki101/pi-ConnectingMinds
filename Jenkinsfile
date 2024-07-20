@@ -6,28 +6,33 @@ pipeline {
         NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
     }
 
+    options {
+        skipDefaultCheckout() // Désactive la récupération automatique du code source pour le configurer manuellement dans chaque étape
+    }
+
     tools {
-        // Spécifiez l'installation de Maven configurée dans Jenkins
+        // Configure Maven tool installation
         maven 'Maven 3.6.3'
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Vérification et récupération du code depuis le dépôt Git
                 git branch: 'Forum', url: 'https://github.com/Seddiki101/pi-ConnectingMinds.git'
             }
         }
 
         stage('Build') {
             steps {
-                // Utilisation de Maven pour nettoyer et empaqueter le projet
+                // Construction du projet Maven
                 sh 'mvn clean package'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                // Analyser avec SonarQube
+                // Analyse avec SonarQube
                 withSonarQubeEnv('SonarQube Server') {
                     sh 'mvn sonar:sonar'
                 }
@@ -36,7 +41,7 @@ pipeline {
 
         stage('Deploy to Nexus') {
             steps {
-                // Déployer les artefacts vers Nexus
+                // Déploiement des artefacts vers le repository Nexus
                 sh 'mvn deploy'
             }
         }
