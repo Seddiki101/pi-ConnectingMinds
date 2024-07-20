@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         MAVEN_HOME = tool name: 'Maven', type: 'maven'
-        MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository' // Utilisation d'un référentiel local pour éviter les problèmes de cache
+        MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository -Dhttp.proxyHost=proxy-host -Dhttp.proxyPort=proxy-port'
         SONAR_HOST_URL = 'http://192.168.33.10:9000/'
         NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
     }
@@ -21,18 +21,17 @@ pipeline {
             }
         }
 
+        stage('Clean Maven Local Repository') {
+            steps {
+                // Nettoyer le cache local de Maven pour éviter les problèmes de cache
+                sh "${tool 'Maven'}/bin/mvn dependency:purge-local-repository"
+            }
+        }
+
         stage('Build') {
             steps {
-                // Configuration éventuelle du proxy Maven
-                script {
-                    if (isUnix()) {
-                        sh 'export MAVEN_OPTS="-Dhttp.proxyHost=proxy-host -Dhttp.proxyPort=proxy-port"'
-                    } else {
-                        bat 'set MAVEN_OPTS="-Dhttp.proxyHost=proxy-host -Dhttp.proxyPort=proxy-port"'
-                    }
-                }
                 // Construction du projet Maven
-                sh "${tool 'Maven'}/bin/mvn clean package" // Utilisation de l'outil Maven configuré dans Jenkins
+                sh "${tool 'Maven'}/bin/mvn clean package"
             }
         }
 
@@ -40,7 +39,7 @@ pipeline {
             steps {
                 // Analyse avec SonarQube
                 withSonarQubeEnv('SonarQube Server') {
-                    sh "${tool 'Maven'}/bin/mvn sonar:sonar" // Utilisation de l'outil Maven pour exécuter l'analyse SonarQube
+                    sh "${tool 'Maven'}/bin/mvn sonar:sonar"
                 }
             }
         }
@@ -48,7 +47,7 @@ pipeline {
         stage('Deploy to Nexus') {
             steps {
                 // Déploiement des artefacts vers le repository Nexus
-                sh "${tool 'Maven'}/bin/mvn deploy" // Utilisation de l'outil Maven pour le déploiement
+                sh "${tool 'Maven'}/bin/mvn deploy"
             }
         }
 
