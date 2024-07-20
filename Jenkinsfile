@@ -4,11 +4,10 @@ pipeline {
     environment {
         SONAR_HOST_URL = 'http://192.168.33.10:9000/'
         NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
-        MAVEN_HOME = '/opt/apache-maven-3.6.3' // Définissez le chemin vers votre installation de Maven
     }
 
     tools {
-        // Spécifiez l'installation de Maven
+        // Spécifiez l'installation de Maven configurée dans Jenkins
         maven 'Maven 3.6.3'
     }
 
@@ -22,7 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Utilisation de Maven pour nettoyer et empaqueter le projet
-                sh "${tool 'Maven 3.6.3'}/bin/mvn clean package"
+                sh 'mvn clean package'
             }
         }
 
@@ -30,7 +29,7 @@ pipeline {
             steps {
                 // Analyser avec SonarQube
                 withSonarQubeEnv('SonarQube Server') {
-                    sh "${tool 'Maven 3.6.3'}/bin/mvn sonar:sonar"
+                    sh 'mvn sonar:sonar'
                 }
             }
         }
@@ -38,7 +37,7 @@ pipeline {
         stage('Deploy to Nexus') {
             steps {
                 // Déployer les artefacts vers Nexus
-                sh "${tool 'Maven 3.6.3'}/bin/mvn deploy"
+                sh 'mvn deploy'
             }
         }
 
