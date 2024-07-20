@@ -4,31 +4,37 @@ pipeline {
     environment {
         M2_HOME = '/opt/apache-maven-3.6.3'
         PATH = "$M2_HOME/bin:$PATH"
+        JAVA_HOME = '/usr/lib/jvm/java-11-openjdk-amd64/' // Assurez-vous de remplacer par le chemin correct de Java 11
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Étape de checkout du code depuis Git
+                // Checkout du code depuis Git
                 checkout scm
             }
         }
+
         stage('Build') {
             steps {
-                // Utilisation de Maven pour compiler et construire le projet
                 script {
+                    // Récupération de l'installation Maven configurée dans Jenkins
                     def mvnHome = tool name: 'Maven 3.6.3', type: 'maven'
                     if (mvnHome != null) {
-                        sh "${mvnHome}/bin/mvn clean install"
+                        // Compilation du projet avec Maven
+                        sh "${mvnHome}/bin/mvn clean install -Dmaven.compiler.release=11"
                     } else {
                         error "Installation de Maven 3.6.3 non trouvée"
                     }
                 }
             }
         }
-        stage('Test') {
+
+        // Ajoutez d'autres étapes de votre pipeline si nécessaire
+
+        stage('Tests') {
             steps {
-                // Exécuter les tests unitaires
+                // Exécution des tests unitaires ou d'intégration
                 script {
                     def mvnHome = tool name: 'Maven 3.6.3', type: 'maven'
                     if (mvnHome != null) {
@@ -39,13 +45,14 @@ pipeline {
                 }
             }
         }
-        stage('Package') {
+
+        stage('Deploy') {
             steps {
-                // Packaging de l'application (si nécessaire)
+                // Déploiement de l'application (exemple : vers un serveur)
                 script {
                     def mvnHome = tool name: 'Maven 3.6.3', type: 'maven'
                     if (mvnHome != null) {
-                        sh "${mvnHome}/bin/mvn package"
+                        sh "${mvnHome}/bin/mvn deploy"
                     } else {
                         error "Installation de Maven 3.6.3 non trouvée"
                     }
@@ -56,7 +63,7 @@ pipeline {
 
     post {
         always {
-            // Actions post-build, comme la collecte des résultats de test
+            // Actions à effectuer après chaque exécution du pipeline
             junit '**/target/surefire-reports/*.xml'
         }
     }
