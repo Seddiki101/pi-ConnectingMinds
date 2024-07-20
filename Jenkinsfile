@@ -5,8 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Effectue le checkout depuis le repository Git
-                    checkout([$class: 'GitSCM', branches: [[name: 'Forum']], userRemoteConfigs: [[url: 'https://github.com/Seddiki101/pi-ConnectingMinds.git']]])
+                    git 'https://github.com/Seddiki101/pi-ConnectingMinds.git'
                 }
             }
         }
@@ -14,7 +13,6 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Exécute la compilation avec Maven
                     sh 'mvn clean package -DskipTests'
                 }
             }
@@ -23,7 +21,6 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Exécute les tests avec Maven
                     sh 'mvn test'
                 }
             }
@@ -32,7 +29,6 @@ pipeline {
         stage('Static Analysis') {
             steps {
                 script {
-                    // Effectue l'analyse statique avec SonarQube
                     withSonarQubeEnv('SonarQube_Server') {
                         sh 'mvn sonar:sonar'
                     }
@@ -43,7 +39,6 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    // Déploie l'application sur Tomcat
                     sh 'mvn tomcat7:redeploy'
                 }
             }
