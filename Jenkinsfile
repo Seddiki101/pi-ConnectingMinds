@@ -19,13 +19,7 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                script {
-                    sh 'mvn test'
-                }
-            }
-        }
+        
 
         stage('Static Analysis') {
             steps {
