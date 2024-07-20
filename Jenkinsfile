@@ -5,7 +5,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    git 'https://github.com/Seddiki101/pi-ConnectingMinds.git'
+                    // Checkout du repository Git avec l'URL spécifiée et la branche 'Forum'
+                    checkout([$class: 'GitSCM', branches: [[name: 'Forum']], userRemoteConfigs: [[url: 'https://github.com/Seddiki101/pi-ConnectingMinds.git']]])
                 }
             }
         }
