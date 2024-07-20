@@ -18,6 +18,13 @@ pipeline {
             }
         }
 
+        stage('Clean dependencies') {
+            steps {
+                // Nettoyage des dépendances locales Maven
+                sh 'mvn dependency:purge-local-repository'
+            }
+        }
+
         stage('Build') {
             steps {
                 // Configuration éventuelle du proxy Maven
