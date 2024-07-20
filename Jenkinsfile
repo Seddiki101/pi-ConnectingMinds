@@ -2,52 +2,43 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = tool name: 'Maven', type: 'maven'
-        MAVEN_OPTS = '-Dmaven.repo.local=.m2/repository -Dhttp.proxyHost=proxy-host -Dhttp.proxyPort=proxy-port'
         SONAR_HOST_URL = 'http://192.168.33.10:9000/'
         NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/'
+        MAVEN_HOME = '/opt/apache-maven-3.6.3' // Définissez le chemin vers votre installation de Maven
     }
 
-    options {
-        skipDefaultCheckout() // Désactive la récupération automatique du code source pour le configurer manuellement dans chaque étape
-        timestamps() // Ajoute des horodatages aux logs pour le suivi
+    tools {
+        // Spécifiez l'installation de Maven
+        maven 'Maven 3.6.3'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Vérification et récupération du code depuis le dépôt Git
                 git branch: 'Forum', url: 'https://github.com/Seddiki101/pi-ConnectingMinds.git'
-            }
-        }
-
-        stage('Clean Maven Local Repository') {
-            steps {
-                // Nettoyer le cache local de Maven pour éviter les problèmes de cache
-                sh "${tool 'Maven'}/bin/mvn dependency:purge-local-repository"
             }
         }
 
         stage('Build') {
             steps {
-                // Construction du projet Maven
-                sh "${tool 'Maven'}/bin/mvn clean package"
+                // Utilisation de Maven pour nettoyer et empaqueter le projet
+                sh "${tool 'Maven 3.6.3'}/bin/mvn clean package"
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                // Analyse avec SonarQube
+                // Analyser avec SonarQube
                 withSonarQubeEnv('SonarQube Server') {
-                    sh "${tool 'Maven'}/bin/mvn sonar:sonar"
+                    sh "${tool 'Maven 3.6.3'}/bin/mvn sonar:sonar"
                 }
             }
         }
 
         stage('Deploy to Nexus') {
             steps {
-                // Déploiement des artefacts vers le repository Nexus
-                sh "${tool 'Maven'}/bin/mvn deploy"
+                // Déployer les artefacts vers Nexus
+                sh "${tool 'Maven 3.6.3'}/bin/mvn deploy"
             }
         }
 
