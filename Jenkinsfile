@@ -21,9 +21,8 @@ pipeline {
 
 
 
-         stage('Static Analysis') {
+        stage('Static Analysis') {
                     steps {
-                        // Étape d'analyse statique avec SonarQube
                         script {
                             docker.image('maven:3.8.2-openjdk-17').inside {
                                 withSonarQubeEnv('SonarQube_Server') {
