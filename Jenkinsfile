@@ -28,13 +28,14 @@ pipeline {
             }
         }
 
-           stage('Deploy to Nexus') {
-                    steps {
-                        script {
-                            sh 'mvn deploy -DskipTests  -Dnexus.username=admin -Dnexus.password=admin'
-                        }
-                    }
-                }
+              stage('Deploy to Nexus') {
+                       steps {
+                           withCredentials([usernamePassword(credentialsId: 'admin', usernameVariable: 'admin', passwordVariable: 'admin')]) {
+                               script {
+                                   sh 'mvn deploy -DskipTests -Dnexus.username=admin -Dnexus.password=admin'
+                               }
+                           }
+                       }
    }
 
 
