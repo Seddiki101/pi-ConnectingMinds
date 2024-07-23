@@ -6,7 +6,6 @@ pipeline {
             NEXUS_PASSWORD = credentials('admin')
         }
 
-
     stages {
         stage('Checkout') {
             steps {
@@ -33,13 +32,8 @@ pipeline {
             }
         }
 
-        stage('Deploy to Nexus') {
-                   steps {
-                       script {
-                           sh 'mvn deploy -DskipTests -Dnexus.username=${NEXUS_USERNAME} -Dnexus.password=${NEXUS_PASSWORD}'
-                       }
-                   }
-               }
+      
+
    }
 
 
