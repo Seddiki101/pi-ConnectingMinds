@@ -27,13 +27,13 @@ pipeline {
             }
         }
 
-         /*stage('Test') {
+         stage('Test') {
                    steps {
                        script {
                          sh 'mvn test'
                        }
                    }
-                }*/
+                }
 
 
         stage('Deploy to Nexus') {

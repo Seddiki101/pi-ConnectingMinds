@@ -1,21 +1,16 @@
 package com.maryem.forum;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @SpringBootTest
-@AutoConfigureMockMvc
-public class ForumApplicationTests {
-
-    @Autowired
-    private MockMvc mockMvc;
+@RunWith(SpringRunner.class)
+class ForumApplicationTests {
 
     @Test
-    public void contextLoads() throws Exception {
-        // Votre test de chargement de contexte
+    void contextLoads() {
     }
-}
 
+}
