@@ -28,6 +28,15 @@ pipeline {
         }
 
 
+        stage('Deploy to Nexus') {
+           steps {
+               script {
+                 sh 'mvn deploy -DskipTests -Dnexus.username=${admin} -Dnexus.password=${admin}'
+               }
+           }
+        }
+
+
 
    }
 
