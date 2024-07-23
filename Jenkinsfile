@@ -24,23 +24,14 @@ pipeline {
       stage('Static Analysis') {
 
           steps {
-              script {
-                  withCredentials([ usernameVariable: 'admin', passwordVariable: 'root']) {
-                      sh "mvn sonar:sonar -Dsonar.login=${admin} -Dsonar.password=${root}"
-                  }
-              }
+
+                      sh "mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=root"
+
           }
       }
 
 
-        stage('Deploy') {
-            steps {
-                script {
-                    sh 'mvn tomcat7:redeploy'
-                }
-            }
-        }
-    }
+
 
     post {
         success {
