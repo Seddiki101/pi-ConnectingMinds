@@ -36,7 +36,7 @@ pipeline {
            stage('Deploy to Nexus') {
                     steps {
                         script {
-                            sh 'mvn deploy -DskipTests -DrepositoryId=nexus-releases -Durl=${env.NEXUS_URL} -Dnexus.username=${env.NEXUS_USERNAME} -Dnexus.password=${env.NEXUS_PASSWORD}'
+                            sh 'mvn deploy -DskipTests -DrepositoryId=nexus-releases -Durl=env.NEXUS_URL -Dnexus.username=env.NEXUS_USERNAME -Dnexus.password=env.NEXUS_PASSWORD'
                         }
                     }
                 }
