@@ -21,17 +21,17 @@ pipeline {
 
 
 
-        stage('Static Analysis') {
-                    steps {
-                        script {
-                            docker.image('maven:3.8.2-openjdk-17').inside {
-                                withSonarQubeEnv('SonarQube_Server') {
-                                    sh 'mvn sonar:sonar'
-                                }
-                            }
-                        }
-                    }
-                }
+      stage('Static Analysis') {
+
+          steps {
+              script {
+                  withCredentials([ usernameVariable: 'admin', passwordVariable: 'root')]) {
+                      sh "mvn sonar:sonar -Dsonar.login=${admin} -Dsonar.password=${root}"
+                  }
+              }
+          }
+      }
+
 
         stage('Deploy') {
             steps {
