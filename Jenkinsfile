@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-     environment {
-            NEXUS_URL = 'http://192.168.33.10:8081/' // Remplacez par l'URL de votre Nexus
-            NEXUS_USERNAME = credentials('admin') // Remplacez 'nexus-username' par le nom de votre credential dans Jenkins
-            NEXUS_PASSWORD = credentials('admin') // Remplacez 'nexus-password' par le nom de votre credential dans Jenkins
-        }
 
     stages {
         stage('Checkout') {
@@ -36,7 +31,7 @@ pipeline {
            stage('Deploy to Nexus') {
                     steps {
                         script {
-                            sh 'mvn deploy -DskipTests -DrepositoryId=nexus-releases -Durl=env.NEXUS_URL -Dnexus.username=env.NEXUS_USERNAME -Dnexus.password=env.NEXUS_PASSWORD'
+                            sh 'mvn deploy -DskipTests  -Dnexus.username=admin -Dnexus.password=admin'
                         }
                     }
                 }
