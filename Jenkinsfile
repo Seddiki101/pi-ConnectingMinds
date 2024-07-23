@@ -10,7 +10,7 @@ pipeline {
                 }
             }
         }
-
+}
         stage('Build') {
             steps {
                 script {
@@ -27,7 +27,7 @@ pipeline {
             }
         }
 
-        
+
 
     post {
         success {
@@ -40,3 +40,5 @@ pipeline {
         }
     }
 }
+
+
