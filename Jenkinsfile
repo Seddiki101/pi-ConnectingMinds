@@ -25,7 +25,7 @@ pipeline {
 
           steps {
               script {
-                  withCredentials([ usernameVariable: 'admin', passwordVariable: 'root')]) {
+                  withCredentials([ usernameVariable: 'admin', passwordVariable: 'root']) {
                       sh "mvn sonar:sonar -Dsonar.login=${admin} -Dsonar.password=${root}"
                   }
               }
