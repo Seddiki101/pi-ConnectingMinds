@@ -34,9 +34,7 @@ pipeline {
                          sh 'mvn deploy -DskipTests -DrepositoryId=nexus-releases -Durl=http://192.168.33.10:8081//repository/maven-releases/ -Dnexus.username=admin -Dnexus.password=admin'
                      }
                  }
-             }
-         }
-
+     }
 
 
 
