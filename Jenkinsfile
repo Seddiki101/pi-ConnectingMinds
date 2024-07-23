@@ -25,7 +25,7 @@ pipeline {
 
           steps {
 
-                      sh "mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=root"
+                      sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=root'
 
           }
       }
