@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-     environment {
-            NEXUS_USERNAME = credentials('admin')
-            NEXUS_PASSWORD = credentials('admin')
-        }
-
     stages {
         stage('Checkout') {
             steps {
@@ -32,7 +27,7 @@ pipeline {
             }
         }
 
-      
+
 
    }
 
