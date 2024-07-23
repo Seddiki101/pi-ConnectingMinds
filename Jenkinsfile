@@ -19,19 +19,15 @@ pipeline {
             }
         }
 
+        stage('Static Analysis') {
+            steps {
+                script {
+                    sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=root'
+                }
+            }
+        }
 
-
-      stage('Static Analysis') {
-
-          steps {
-
-                      sh 'mvn sonar:sonar -Dsonar.login=admin -Dsonar.password=root'
-
-          }
-      }
-
-
-
+        
 
     post {
         success {
