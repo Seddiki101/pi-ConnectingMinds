@@ -10,7 +10,7 @@ pipeline {
                 }
             }
         }
-}
+
         stage('Build') {
             steps {
                 script {
@@ -26,19 +26,11 @@ pipeline {
                 }
             }
         }
+   }
 
 
 
-    post {
-        success {
-            echo 'Le pipeline a réussi !'
-            // Ajoutez ici des notifications par email, Slack, etc.
-        }
-        failure {
-            echo 'Le pipeline a échoué. Veuillez vérifier les logs.'
-            // Ajoutez ici des notifications par email, Slack, etc.
-        }
-    }
+
 }
 
 
