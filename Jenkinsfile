@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+     environment {
+            NEXUS_USERNAME = credentials('admin')
+            NEXUS_PASSWORD = credentials('admin')
+        }
+
 
     stages {
         stage('Checkout') {
@@ -28,15 +33,13 @@ pipeline {
             }
         }
 
-         stage('Deploy to Nexus') {
-             steps {
-                withCredentials([usernamePassword(credentialsId: 'admin', usernameVariable: 'admin', passwordVariable: 'admin')]) {
-                      script {
-                         sh 'mvn deploy -DskipTests -Dnexus.username=admin -Dnexus.password=admin'
-                      }
+        stage('Deploy to Nexus') {
+                   steps {
+                       script {
+                           sh 'mvn deploy -DskipTests -Dnexus.username=${NEXUS_USERNAME} -Dnexus.password=${NEXUS_PASSWORD}'
+                       }
                    }
-             }
-             }
+               }
    }
 
 
