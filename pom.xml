@@ -12,7 +12,7 @@
 
     <groupId>com.maryem</groupId>
     <artifactId>Forum</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version> <!-- Changer la version pour RELEASE -->
     <name>Forum</name>
     <description>Forum</description>
 
@@ -33,9 +33,8 @@
         </snapshotRepository>
     </distributionManagement>
 
-
     <dependencies>
-        <!-- Spring Boot Starter dependencies -->
+        <!-- Dépendances Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jdbc</artifactId>
@@ -81,7 +80,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Test dependencies -->
+        <!-- Dépendances de Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
