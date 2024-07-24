@@ -36,13 +36,13 @@ pipeline {
                 }
 
 
-       stage('Deploy to Nexus') {
-                 steps {
-                     script {
-                         sh 'mvn deploy -DskipTests'
-                     }
-                 }
-             }
+        stage('Deploy to Nexus') {
+           steps {
+               script {
+                 sh 'mvn deploy'
+               }
+           }
+        }
 
 
 
